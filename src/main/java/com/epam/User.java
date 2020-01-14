@@ -23,7 +23,10 @@ public class User {
     private PreparedStatement pst;
     private ResultSet rs;
 
-    public void login(){
+    private boolean usernameValid;
+    private boolean passwordValid;
+
+    public User(){
         try {
             // Initializing properties for database connection establishment.
             Properties property = new Properties();
@@ -34,22 +37,11 @@ public class User {
             USER_NAME = property.getProperty("db.username");
             DB_PASSWORD = property.getProperty("db.password");
 
-            userDataInput();
+            usernameValid = false;
+            passwordValid = false;
 
             Class.forName("oracle.jdbc.driver.OracleDriver");
             connection = DriverManager.getConnection(URL, USER_NAME, DB_PASSWORD);
-            SQL = "SELECT login FROM Users WHERE login = '" + username + "'";
-            pst = connection.prepareStatement(SQL);
-            rs = pst.executeQuery();
-            rs.next();
-            if(rs.getString(1).equals(username)) log.info("usernameValid");
-
-            SQL = "SELECT password FROM Users WHERE password = '" + password + "'";
-            pst = connection.prepareStatement(SQL);
-            rs = pst.executeQuery();
-            rs.next();
-            if(rs.getString(1).equals(password)) log.info("passwordValid");
-
         }
         catch(FileNotFoundException e){
             log.error("config.properties not found, " + e);
@@ -62,6 +54,33 @@ public class User {
         }
         catch(IOException e){
             log.error(e);
+        }
+    }
+
+    public void login(){
+        while(!usernameValid && !passwordValid) {
+            try {
+                //userDataInput();
+                username = "asgordeev";
+                password = "password";
+                SQL = "SELECT login FROM Users WHERE login = '" + username + "'";
+                pst = connection.prepareStatement(SQL);
+                rs = pst.executeQuery();
+                rs.next();
+                if (rs.getString(1).equals(username)) usernameValid = true;
+
+                SQL = "SELECT password FROM Users WHERE password = '" + password + "'";
+                pst = connection.prepareStatement(SQL);
+                rs = pst.executeQuery();
+                rs.next();
+                if (rs.getString(1).equals(password)) passwordValid = true;
+
+                if (usernameValid && passwordValid) {
+                    log.info("login success!");
+                } else log.info("login or password incorrect!");
+            } catch (SQLException e) {
+                log.error("login or password incorrect!");
+            }
         }
     }
 
