@@ -71,7 +71,7 @@ public class UserWindow {
                     welcome();
                 }
             } catch (SQLException e) {
-                log.error("login or password incorrect!");
+                log.info("login or password incorrect!");
             }
         }
     }
@@ -85,28 +85,51 @@ public class UserWindow {
     }
 
     private void welcome(){
-        String firstName;
-        String lastName;
-
         try {
             SQL = "SELECT * FROM Users WHERE login = '" + username + "'";
             pst = connection.prepareStatement(SQL);
             rs = pst.executeQuery();
             rs.next();
-            firstName = rs.getString(2);
-            lastName = rs.getString(4);
             User user = new User(username);
             if (!user.isActive) {
-                    log.info("Your account has been blocked.");
+                log.info("Your account has been blocked.");
             }
-            if(user.isAdmin) {
-                user = new Admin(user);
-                log.info("You logged in as administrator");
+            else {
+                log.info("Welcome, " + user.name + " " + user.lastName + "!");
+                if(user.isAdmin){
+                    log.info("You logged in as administrator");
+                    Admin admin = new Admin(user);
+                    menu(admin);
+                }
+                else{
+                    //todo call the user menu
+                }
             }
-            log.info("Welcome, " + firstName + " " + lastName + "!");
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Welcome SQL exception");
+        }
+    }
+
+    private void menu(User user){
+        log.info("\n\n\n\n");
+        log.info("MAIN MENU");
+        log.info("Type one of the control commands. To see those type help.\nTo quit type quit.");
+
+
+        String command;
+        scanner = new Scanner(System.in);
+
+        while(true) {
+            command = scanner.nextLine();
+            if(command.equals("addBook")){
+                // tba
+            }
+            else if (command.equals("quit")) {
+                log.info("Goodbye.");
+                break;
+            }
+            else log.info("The cycle proceeds");
         }
     }
 }
