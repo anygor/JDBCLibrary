@@ -16,7 +16,8 @@ public class User {
     String lastName;
     boolean isAdmin;
     boolean isActive;
-    Scanner scanner;
+    Scanner stringScanner;
+    Scanner numberScanner;
     private static final Logger log = LogManager.getLogger();
 
     Connection connection;
@@ -59,26 +60,28 @@ public class User {
         int pageCount;
         String publisher;
         int authorID;
+        Scanner numberScanner = new Scanner(System.in);
 
-        scanner = new Scanner(System.in);
-        log.info("addBook method called.\n Book Name: ");
-        bookName = scanner.nextLine();
-        log.info("Release year: ");
-        releaseYear = scanner.nextInt();
-        log.info("Author (FN/SN/LN): ");
-        author = scanner.nextLine();
-        log.info("Amount of pages: ");
-        pageCount = scanner.nextInt();
-        log.info("Publisher: ");
-        publisher = scanner.nextLine();
+        stringScanner = new Scanner(System.in);
+        //log.info("addBook method called.");
+        //log.info("Book Name: ");
+        //bookName = stringScanner.nextLine();
+        //log.info("Release year: ");
+        //releaseYear = numberScanner.nextInt();
+        //log.info("Author (FN/SN/LN): ");
+        //author = stringScanner.nextLine();
+        //log.info("Amount of pages: ");
+        //pageCount = numberScanner.nextInt();
+        //log.info("Publisher: ");
+        //publisher = stringScanner.nextLine();
+        bookName = "Neznaika";
+        releaseYear = 1966;
+        author = "Nikolay Nosov";
+        pageCount = 5;
+        publisher = "USSR";
 
-        int id = authorExistsID(author);
-        if (id != -1) {
-            authorID = id;
-        }
-        else {
-            authorID = id;
-        }
+        addAuthor(author);
+        authorID = authorID(author);
 
         try {
             UserWindow.SQL = "INSERT INTO \"JDBC\".\"BOOKS\" (BOOKNAME, RELEASEYEAR, AUTHORID, PAGECOUNT, ISBN, PUBLISHERID) VALUES " +
@@ -91,7 +94,41 @@ public class User {
         }
     }
 
-    private int authorExistsID(String author){
+    private boolean authorExists(String author){
+        String[] authorStrings = author.split(" ");
+        String authorFirstName;
+        String authorSecondName;
+        String authorLastName;
+        if(authorStrings.length == 2){
+            authorFirstName = authorStrings[0];
+            authorLastName = authorStrings[1];
+        }
+        else{
+            authorFirstName = authorStrings[0];
+            authorLastName = authorStrings[2];
+        }
+        try {
+            connection = UserWindow.connection;
+            UserWindow.SQL = "SELECT COUNT(*) FROM Authors WHERE name '" + authorFirstName + "' AND lastName = '" + authorLastName + "')";
+            pst = connection.prepareStatement(SQL);
+            rs = pst.executeQuery();
+            rs.next();
+            if(rs.getInt(1) == 0){
+                log.info("No such author, author will be added? :D LOL");
+                return false;
+            }
+            else {
+                log.info("Author is already in the library");
+                return true;
+            }
+        }
+        catch(SQLException e){
+            log.error("AuthorExistsCheckError");
+            return false;
+        }
+    }
+
+    private int authorID(String author){
         String[] authorStrings = author.split(" ");
         String authorFirstName;
         String authorSecondName;
@@ -105,11 +142,18 @@ public class User {
             authorLastName = authorStrings[2];
         }
         try{
-            UserWindow.SQL = "SELECT * FROM Authors WHERE (name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "')";
-            pst = connection.prepareStatement(SQL);
-            rs = pst.executeQuery();
-            rs.next();
-            return rs.getInt(1);
+            if(authorExists(author)){
+                UserWindow.SQL = "SELECT authorID FROM Authors WHERE name '" + authorFirstName + "' AND lastName = '" + authorLastName + "')";
+                pst = connection.prepareStatement(SQL);
+                rs = pst.executeQuery();
+                return rs.getInt(1);
+            }
+            else{
+                UserWindow.SQL = "SELECT MAX(authorid) FROM AUTHORS;";
+                pst = connection.prepareStatement(SQL);
+                rs = pst.executeQuery();
+                return rs.getInt(1) + 1;
+            }
         }
         catch(SQLException e){
             return -1;
@@ -117,7 +161,7 @@ public class User {
     }
 
     public void addAuthor(String author){
-        if(authorExistsID(author)!= -1){
+        if(authorExists(author)){
             log.info("Author exists");
         }
         else{
@@ -126,7 +170,7 @@ public class User {
             String authorSecondName;
             String authorLastName;
             log.info("Author should have a birthdate, please enter one (DD-MMM-YYYY):");
-            String dob = scanner.nextLine();
+            String dob = stringScanner.nextLine();
             if(authorStrings.length == 2){
                 authorFirstName = authorStrings[0];
                 authorSecondName = null;

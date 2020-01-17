@@ -114,7 +114,8 @@ public class UserWindow {
     private void menu(User user){
         log.info("\n\n\n\n");
         log.info("MAIN MENU");
-        log.info("Type one of the control commands. To see those type help.\nTo quit type quit.");
+        log.info("Type one of the control commands. To see those type help. ");
+        log.info("To quit type quit.");
 
 
         String command;
@@ -123,7 +124,7 @@ public class UserWindow {
         while(true) {
             command = scanner.nextLine();
             if(command.equals("addBook")){
-                // tba
+                user.addBook();
             }
             else if (command.equals("quit")) {
                 log.info("Goodbye.");
