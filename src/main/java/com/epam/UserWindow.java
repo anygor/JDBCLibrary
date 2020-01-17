@@ -122,7 +122,8 @@ public class UserWindow {
         scanner = new Scanner(System.in);
 
         while(true) {
-            command = scanner.nextLine();
+            //command = scanner.nextLine();
+            command = "addBook";
             if(command.equals("addBook")){
                 user.addBook();
             }

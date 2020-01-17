@@ -84,8 +84,8 @@ public class User {
         authorID = authorID(author);
 
         try {
-            UserWindow.SQL = "INSERT INTO \"JDBC\".\"BOOKS\" (BOOKNAME, RELEASEYEAR, AUTHORID, PAGECOUNT, ISBN, PUBLISHERID) VALUES " +
-                    "('" + bookName + "', '" + releaseYear + "', '" + authorID + "', '" + pageCount + "', '" + 1 + "'";
+            SQL = "INSERT INTO \"JDBC\".\"BOOKS\" (BOOKNAME, RELEASEYEAR, AUTHORID, PAGECOUNT, ISBN, PUBLISHERID) VALUES " +
+                    "('" + bookName + "', '" + releaseYear + "', '" + authorID + "', '" + pageCount + "', 'ISBN" + "', '" + 1 + "')";
             pst = connection.prepareStatement(SQL);
             rs = pst.executeQuery();
         }
@@ -109,7 +109,7 @@ public class User {
         }
         try {
             connection = UserWindow.connection;
-            UserWindow.SQL = "SELECT COUNT(*) FROM Authors WHERE name '" + authorFirstName + "' AND lastName = '" + authorLastName + "')";
+            SQL = "SELECT COUNT(*) FROM Authors WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "'";
             pst = connection.prepareStatement(SQL);
             rs = pst.executeQuery();
             rs.next();
@@ -143,13 +143,14 @@ public class User {
         }
         try{
             if(authorExists(author)){
-                UserWindow.SQL = "SELECT authorID FROM Authors WHERE name '" + authorFirstName + "' AND lastName = '" + authorLastName + "')";
+                SQL = "SELECT authorID FROM Authors WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "'";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
+                rs.next();
                 return rs.getInt(1);
             }
             else{
-                UserWindow.SQL = "SELECT MAX(authorid) FROM AUTHORS;";
+                SQL = "SELECT MAX(authorid) FROM AUTHORS;";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
                 return rs.getInt(1) + 1;
@@ -170,7 +171,8 @@ public class User {
             String authorSecondName;
             String authorLastName;
             log.info("Author should have a birthdate, please enter one (DD-MMM-YYYY):");
-            String dob = stringScanner.nextLine();
+            String dob = "20-AUG-1999";
+            //String dob = stringScanner.nextLine();
             if(authorStrings.length == 2){
                 authorFirstName = authorStrings[0];
                 authorSecondName = null;
@@ -183,12 +185,13 @@ public class User {
             }
             try {
                 int currentMaxID;
-                UserWindow.SQL = "SELECT MAX(authorid) FROM AUTHORS;";
+                SQL = "SELECT MAX(authorid) FROM Authors";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
+                rs.next();
                 currentMaxID = rs.getInt(1);
-                UserWindow.SQL = "INSERT INTO \"JDBC\".\"USERS\" (AUTHORID, NAME, SECONDNAME, LASTNAME, DOB) VALUES " +
-                        "('" + (currentMaxID + 1) + "', '" + authorFirstName + "', '" + authorSecondName + "', '" + authorLastName + "', '" + dob + "'";
+                SQL = "INSERT INTO \"JDBC\".\"AUTHORS\" (AUTHORID, NAME, SECONDNAME, LASTNAME, DOB) VALUES " +
+                        "('" + (currentMaxID + 1) + "', '" + authorFirstName + "', '" + authorSecondName + "', '" + authorLastName + "', '" + dob + "')";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
             }
