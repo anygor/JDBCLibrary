@@ -43,4 +43,9 @@ public class User {
         userDAO = new UserDAO();
         userDAO.addBook();
     }
+
+    public void addAuthor(String author){
+        userDAO = new UserDAO();
+        userDAO.addAuthor(author);
+    }
 }

@@ -129,8 +129,56 @@ public class UserWindow {
             if(command.equals("help")){
                 log.info("list of supported commands:");
                 log.info("help - stop it, get some help");
+                log.info("addAuthor - to add a new author");
                 log.info("addBook - to add some boox");
                 log.info("quit - to quit");
+            }
+            else if (command.equals("addAuthor")){
+                String author;
+                log.info("Author FN/SN/LN: ");
+                author = scanner.nextLine();
+                user.addAuthor(author);
+            }
+            else if(command.equals("addBook")){
+                user.addBook();
+            }
+            else if (command.equals("quit")) {
+                log.info("Goodbye.");
+                break;
+            }
+            else log.info("The cycle proceeds");
+        }
+    }
+
+    private void menu(Admin user){
+        log.info("\n\n\n\n");
+        log.info("MAIN MENU");
+        log.info("Type one of the control commands. To see those type help. ");
+        log.info("To quit type quit.");
+
+
+        String command;
+        scanner = new Scanner(System.in);
+
+        while(true) {
+            command = scanner.nextLine();
+            // command = "addBook";
+            if(command.equals("help")){
+                log.info("list of supported commands:");
+                log.info("help - stop it, get some help");
+                log.info("addBook - to add some boox");
+                log.info("addAuthor - to add a new author");
+                log.info("addUser - to add some new user");
+                log.info("quit - to quit");
+            }
+            else if (command.equals("addUser")){
+                user.addUser();
+            }
+            else if (command.equals("addAuthor")){
+                String author;
+                log.info("Author FN/SN/LN: ");
+                author = scanner.nextLine();
+                user.addAuthor(author);
             }
             else if(command.equals("addBook")){
                 user.addBook();

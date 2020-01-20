@@ -59,22 +59,17 @@ public class UserDAO {
         Scanner numberScanner = new Scanner(System.in);
 
         stringScanner = new Scanner(System.in);
-        //log.info("addBook method called.");
-        //log.info("Book Name: ");
-        //bookName = stringScanner.nextLine();
-        //log.info("Release year: ");
-        //releaseYear = numberScanner.nextInt();
-        //log.info("Author (FN/SN/LN): ");
-        //author = stringScanner.nextLine();
-        //log.info("Amount of pages: ");
-        //pageCount = numberScanner.nextInt();
-        //log.info("Publisher: ");
-        //publisher = stringScanner.nextLine();
-        bookName = "Neznaika";
-        releaseYear = 1966;
-        author = "Nikolay Nosov";
-        pageCount = 5;
-        publisher = "USSR";
+        log.info("addBook method called.");
+        log.info("Book Name: ");
+        bookName = stringScanner.nextLine();
+        log.info("Release year: ");
+        releaseYear = numberScanner.nextInt();
+        log.info("Author (FN/SN/LN): ");
+        author = stringScanner.nextLine();
+        log.info("Amount of pages: ");
+        pageCount = numberScanner.nextInt();
+        log.info("Publisher: ");
+        publisher = stringScanner.nextLine();
         addAuthor(author);
         authorID = authorID(author);
 
@@ -206,8 +201,8 @@ public class UserDAO {
                 rs = pst.executeQuery();
                 rs.next();
                 currentMaxID = rs.getInt(1);
-                SQL = "INSERT INTO \"JDBC\".\"AUTHORS\" (AUTHORID, NAME, SECONDNAME, LASTNAME, DOB) VALUES " +
-                        "('" + (currentMaxID + 1) + "', '" + authorFirstName + "', '" + authorSecondName + "', '" + authorLastName + "', '" + dob + "')";
+                SQL = "INSERT INTO \"JDBC\".\"AUTHORS\" (AUTHORID, NAME, SECONDNAME, LASTNAME, DOB, ISDELETED) VALUES " +
+                        "('" + (currentMaxID + 1) + "', '" + authorFirstName + "', '" + authorSecondName + "', '" + authorLastName + "', '" + dob + "', '" + "False')";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
             }
