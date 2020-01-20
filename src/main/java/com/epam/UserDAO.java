@@ -11,11 +11,6 @@ import java.util.Scanner;
 
 public class UserDAO {
     private int userID;
-   // String name;
-   // String secondName;
-   // String lastName;
-   // boolean isAdmin;
-   // boolean isActive;
     Scanner stringScanner;
     Scanner numberScanner;
     private static final Logger log = LogManager.getLogger();
@@ -78,8 +73,8 @@ public class UserDAO {
         }
         else {
             try {
-                SQL = "INSERT INTO \"JDBC\".\"BOOKS\" (BOOKNAME, RELEASEYEAR, AUTHORID, PAGECOUNT, ISBN, PUBLISHERID) VALUES " +
-                        "('" + bookName + "', '" + releaseYear + "', '" + authorID + "', '" + pageCount + "', 'ISBN" + "', '" + 1 + "')";
+                SQL = "INSERT INTO \"JDBC\".\"BOOKS\" (BOOKNAME, RELEASEYEAR, AUTHORID, PAGECOUNT, ISBN, PUBLISHERID, ISDELETED) VALUES " +
+                        "('" + bookName + "', '" + releaseYear + "', '" + authorID + "', '" + pageCount + "', 'ISBN" + "', '" + 1 + "', 'False')";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
             } catch (SQLException e) {
@@ -156,15 +151,15 @@ public class UserDAO {
     }
 
     private boolean bookExists(String bookName){
-        try{
-            SQL = "SELECT COUNT(*) FROM Books WHERE bookName = '" + bookName + "'";
+        try {
+            SQL = "SELECT COUNT(*) FROM Books WHERE bookName = '" + bookName + "' AND isDeleted = 'False'";
             pst = connection.prepareStatement(SQL);
             rs = pst.executeQuery();
             rs.next();
-            if(rs.getInt(1) == 0){
+            int bookAmount = rs.getInt(1);
+            if (bookAmount == 0) {
                 return false;
-            }
-            else return true;
+            } else return true;
         }
         catch(SQLException e){
             log.error("BookExists SQL exception");
@@ -209,6 +204,23 @@ public class UserDAO {
             catch(SQLException e){
                 log.error("sql exception at addauthor");
             }
+        }
+    }
+
+    public void removeBook(String bookName){
+        try {
+            if (bookExists(bookName)) {
+                SQL = "UPDATE BOOKS SET isDeleted = 'True' WHERE bookName = '" + bookName + "'";
+                pst = connection.prepareStatement(SQL);
+                rs = pst.executeQuery();
+                log.info("Book " + bookName + " removed");
+            }
+            else{
+                log.info("There is no such book");
+            }
+        }
+        catch(SQLException e){
+            log.error("remove book sql error");
         }
     }
 }

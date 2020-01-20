@@ -3,9 +3,6 @@ package com.epam;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Scanner;
 
 
@@ -21,10 +18,6 @@ public class User {
     UserDAO userDAO;
     private static final Logger log = LogManager.getLogger();
 
-    Connection connection;
-    String SQL;
-    PreparedStatement pst;
-    ResultSet rs;
 
     public User(){
         name = null;
@@ -47,5 +40,10 @@ public class User {
     public void addAuthor(String author){
         userDAO = new UserDAO();
         userDAO.addAuthor(author);
+    }
+
+    public void removeBook(String bookName){
+        userDAO = new UserDAO();
+        userDAO.removeBook(bookName);
     }
 }

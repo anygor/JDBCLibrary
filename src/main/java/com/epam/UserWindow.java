@@ -37,7 +37,7 @@ public class UserWindow {
             DB_PASSWORD = property.getProperty("db.password");
 
 
-            Class.forName("oracle.jdbc.driver.OracleDriver");
+            Class.forName(property.getProperty("db.driverSetup"));
             connection = DriverManager.getConnection(URL, USER_NAME, DB_PASSWORD);
         }
         catch(FileNotFoundException e){
@@ -131,6 +131,7 @@ public class UserWindow {
                 log.info("help - stop it, get some help");
                 log.info("addAuthor - to add a new author");
                 log.info("addBook - to add some boox");
+                log.info("removeBook - to remove book");
                 log.info("quit - to quit");
             }
             else if (command.equals("addAuthor")){
@@ -141,6 +142,12 @@ public class UserWindow {
             }
             else if(command.equals("addBook")){
                 user.addBook();
+            }
+            else if(command.equals("removeBook")){
+                String bookName;
+                log.info("Book name:");
+                bookName = scanner.nextLine();
+                user.removeBook(bookName);
             }
             else if (command.equals("quit")) {
                 log.info("Goodbye.");
@@ -162,13 +169,13 @@ public class UserWindow {
 
         while(true) {
             command = scanner.nextLine();
-            // command = "addBook";
             if(command.equals("help")){
                 log.info("list of supported commands:");
                 log.info("help - stop it, get some help");
                 log.info("addBook - to add some boox");
                 log.info("addAuthor - to add a new author");
                 log.info("addUser - to add some new user");
+                log.info("removeBook - to remove book");
                 log.info("quit - to quit");
             }
             else if (command.equals("addUser")){
@@ -182,6 +189,12 @@ public class UserWindow {
             }
             else if(command.equals("addBook")){
                 user.addBook();
+            }
+            else if(command.equals("removeBook")){
+                String bookName;
+                log.info("Book name:");
+                bookName = scanner.nextLine();
+                user.removeBook(bookName);
             }
             else if (command.equals("quit")) {
                 log.info("Goodbye.");
