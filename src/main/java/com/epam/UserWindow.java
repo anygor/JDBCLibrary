@@ -57,9 +57,9 @@ public class UserWindow {
     public void login(){
         while(!loggedIn) {
             try {
-                //userDataInput();
-                username = "asgordeev";
-                password = "password";
+                userDataInput();
+                //username = "asgordeev";
+                //password = "password";
                 SQL = "SELECT * FROM Users WHERE login = '" + username + "'";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
@@ -68,10 +68,12 @@ public class UserWindow {
                         rs.getString(6).equals(password)) {
                     log.info("login success!");
                     loggedIn = true;
-                    welcome();
+                }
+                else{
+                    log.info("Wrong password, try again.");
                 }
             } catch (SQLException e) {
-                log.info("login or password incorrect!");
+                log.info("No such user, try again.");
             }
         }
     }
@@ -84,7 +86,7 @@ public class UserWindow {
         password = scanner.nextLine();
     }
 
-    private void welcome(){
+    public void welcome(){
         try {
             SQL = "SELECT * FROM Users WHERE login = '" + username + "'";
             pst = connection.prepareStatement(SQL);
@@ -102,7 +104,7 @@ public class UserWindow {
                     menu(admin);
                 }
                 else{
-                    //todo call the user menu
+                    menu(user);
                 }
             }
         }
@@ -122,9 +124,15 @@ public class UserWindow {
         scanner = new Scanner(System.in);
 
         while(true) {
-            //command = scanner.nextLine();
-            command = "addBook";
-            if(command.equals("addBook")){
+            command = scanner.nextLine();
+            // command = "addBook";
+            if(command.equals("help")){
+                log.info("list of supported commands:");
+                log.info("help - stop it, get some help");
+                log.info("addBook - to add some boox");
+                log.info("quit - to quit");
+            }
+            else if(command.equals("addBook")){
                 user.addBook();
             }
             else if (command.equals("quit")) {
