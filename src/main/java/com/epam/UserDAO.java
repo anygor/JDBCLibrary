@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 import java.util.Scanner;
 
 public class UserDAO {
@@ -51,6 +52,8 @@ public class UserDAO {
         int pageCount;
         String publisher;
         int authorID;
+        int publisherID;
+        String ISBN;
         Scanner numberScanner = new Scanner(System.in);
 
         stringScanner = new Scanner(System.in);
@@ -67,6 +70,9 @@ public class UserDAO {
         publisher = stringScanner.nextLine();
         addAuthor(author);
         authorID = authorID(author);
+        addPublisher(publisher);
+        publisherID = publisherID(publisher);
+        ISBN = generateISBN();
 
         if(bookExists(bookName)){
             log.info("Book is already in your library");
@@ -74,7 +80,7 @@ public class UserDAO {
         else {
             try {
                 SQL = "INSERT INTO \"JDBC\".\"BOOKS\" (BOOKNAME, RELEASEYEAR, AUTHORID, PAGECOUNT, ISBN, PUBLISHERID, ISDELETED) VALUES " +
-                        "('" + bookName + "', '" + releaseYear + "', '" + authorID + "', '" + pageCount + "', 'ISBN" + "', '" + 1 + "', 'False')";
+                        "('" + bookName + "', '" + releaseYear + "', '" + authorID + "', '" + pageCount + "', '" + ISBN + "', '" + publisherID + "', 'False')";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
             } catch (SQLException e) {
@@ -117,6 +123,24 @@ public class UserDAO {
         }
     }
 
+    private String generateISBN() {
+        try{
+            SQL = "SELECT ISBN FROM Books ORDER BY ISBN DESC";
+            pst = connection.prepareStatement(SQL);
+            rs = pst.executeQuery();
+            rs.next();
+            String tmp = rs.getString(1);
+            tmp = tmp.substring(4);
+            long id = Long.parseLong(tmp);
+            id++;
+            return "978-" + id;
+        }
+        catch(SQLException e){
+            log.error("generate isbn sqlexeption");
+            return "-1";
+        }
+    }
+
     private int authorID(String author){
         String[] authorStrings = author.split(" ");
         String authorFirstName;
@@ -147,6 +171,67 @@ public class UserDAO {
         }
         catch(SQLException e){
             return -1;
+        }
+    }
+
+    private boolean publisherExists(String publisher){
+        try{
+            SQL = "SELECT COUNT(*) FROM Publishers WHERE publisherName = '" + publisher + "'";
+            pst = connection.prepareStatement(SQL);
+            rs = pst.executeQuery();
+            rs.next();
+            if(rs.getInt(1) != 0){
+                return true;
+            }
+            else return false;
+        }
+        catch (SQLException e){
+            log.error("publisherExists method sql exception");
+            return false;
+        }
+    }
+
+    private int publisherID(String publisher){
+        try{
+            if(publisherExists(publisher)){
+                SQL = "SELECT publisherID FROM Publishers WHERE publisherName = '" + publisher + "'";
+                pst = connection.prepareStatement(SQL);
+                rs = pst.executeQuery();
+                rs.next();
+                return rs.getInt(1);
+            }
+            else{
+                SQL = "SELECT MAX(publisherID) FROM Publishers;";
+                pst = connection.prepareStatement(SQL);
+                rs = pst.executeQuery();
+                return rs.getInt(1) + 1;
+            }
+        }
+        catch(SQLException e){
+            return -1;
+        }
+    }
+
+    private void addPublisher(String publisher){
+        if(publisherExists(publisher)){
+            log.info("publisher exists");
+        }
+        else{
+            try {
+                int currentMaxID;
+                SQL = "SELECT MAX(publisherID) FROM Publishers";
+                pst = connection.prepareStatement(SQL);
+                rs = pst.executeQuery();
+                rs.next();
+                currentMaxID = rs.getInt(1);
+
+                SQL = "INSERT INTO Publishers (publisherID, publisherName) VALUES (" + (currentMaxID + 1) + ", '" + publisher + "')";
+                pst = connection.prepareStatement(SQL);
+                rs = pst.executeQuery();
+            }
+            catch(SQLException e) {
+                log.error("add publisher sql excpetion");
+            }
         }
     }
 
