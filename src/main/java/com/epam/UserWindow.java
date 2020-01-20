@@ -125,13 +125,13 @@ public class UserWindow {
 
         while(true) {
             command = scanner.nextLine();
-            // command = "addBook";
             if(command.equals("help")){
                 log.info("list of supported commands:");
                 log.info("help - stop it, get some help");
                 log.info("addAuthor - to add a new author");
                 log.info("addBook - to add some boox");
                 log.info("removeBook - to remove book");
+                log.info("removeAuthor - to remove author and their books");
                 log.info("quit - to quit");
             }
             else if (command.equals("addAuthor")){
@@ -148,6 +148,12 @@ public class UserWindow {
                 log.info("Book name:");
                 bookName = scanner.nextLine();
                 user.removeBook(bookName);
+            }
+            else if(command.equals("removeAuthor")){
+                String author;
+                log.info("Author FN/SN/LN: ");
+                author = scanner.nextLine();
+                user.removeAuthor(author);
             }
             else if (command.equals("quit")) {
                 log.info("Goodbye.");
@@ -176,6 +182,7 @@ public class UserWindow {
                 log.info("addAuthor - to add a new author");
                 log.info("addUser - to add some new user");
                 log.info("removeBook - to remove book");
+                log.info("removeAuthor - to remove author and their books");
                 log.info("quit - to quit");
             }
             else if (command.equals("addUser")){
@@ -196,11 +203,17 @@ public class UserWindow {
                 bookName = scanner.nextLine();
                 user.removeBook(bookName);
             }
+            else if(command.equals("removeAuthor")){
+                String author;
+                log.info("Author FN/SN/LN: ");
+                author = scanner.nextLine();
+                user.removeAuthor(author);
+            }
             else if (command.equals("quit")) {
                 log.info("Goodbye.");
                 break;
             }
-            else log.info("The cycle proceeds");
+            else log.info("invalid command");
         }
     }
 }

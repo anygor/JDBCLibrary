@@ -168,6 +168,7 @@ public class UserDAO {
     }
 
     public void addAuthor(String author){
+        stringScanner = new Scanner(System.in);
         if(authorExists(author)){
             log.info("Author exists");
         }
@@ -177,8 +178,7 @@ public class UserDAO {
             String authorSecondName;
             String authorLastName;
             log.info("Author should have a birthdate, please enter one (DD-MMM-YYYY):");
-            String dob = "20-AUG-1999";
-            //String dob = stringScanner.nextLine();
+            String dob = stringScanner.nextLine();
             if(authorStrings.length == 2){
                 authorFirstName = authorStrings[0];
                 authorSecondName = null;
@@ -200,6 +200,7 @@ public class UserDAO {
                         "('" + (currentMaxID + 1) + "', '" + authorFirstName + "', '" + authorSecondName + "', '" + authorLastName + "', '" + dob + "', '" + "False')";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
+                log.info("author added");
             }
             catch(SQLException e){
                 log.error("sql exception at addauthor");
@@ -221,6 +222,39 @@ public class UserDAO {
         }
         catch(SQLException e){
             log.error("remove book sql error");
+        }
+    }
+
+    public void removeAuthor(String author){
+        if(!authorExists(author)){
+            log.info("No such author");
+        }
+        else {
+            String[] authorStrings = author.split(" ");
+            String authorFirstName;
+            String authorSecondName;
+            String authorLastName;
+            if (authorStrings.length == 2) {
+                authorFirstName = authorStrings[0];
+                authorSecondName = null;
+                authorLastName = authorStrings[1];
+            } else {
+                authorFirstName = authorStrings[0];
+                authorSecondName = authorStrings[1];
+                authorLastName = authorStrings[2];
+            }
+            try {
+                SQL = "UPDATE Books SET isDeleted = 'True' WHERE authorID = " + authorID(author);
+                pst = connection.prepareStatement(SQL);
+                rs = pst.executeQuery();
+                SQL = "UPDATE Authors SET isDeleted = 'True' WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "'";
+                pst = connection.prepareStatement(SQL);
+                rs = pst.executeQuery();
+                log.info("Author " + authorFirstName + " " + authorLastName + " removed");
+            }
+            catch(SQLException e){
+                log.error("author remove error");
+            }
         }
     }
 }

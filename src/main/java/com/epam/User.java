@@ -46,4 +46,9 @@ public class User {
         userDAO = new UserDAO();
         userDAO.removeBook(bookName);
     }
+
+    public void removeAuthor(String author){
+        userDAO = new UserDAO();
+        userDAO.removeAuthor(author);
+    }
 }
