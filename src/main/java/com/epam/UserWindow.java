@@ -132,7 +132,9 @@ public class UserWindow {
                     log.info("help - stop it, get some help");
                     log.info("listOfBooks - list of books in the library");
                     log.info("listOfAuthors - list of authors in the library");
+                    log.info("myBookmarks - my bookmarks");
                     log.info("addBookmark - to add bookmark");
+                    log.info("removeBookmark - remove bookmark");
                     log.info("addAuthor - to add a new author");
                     log.info("addBook - to add some boox");
                     log.info("removeBook - to remove book");
@@ -148,8 +150,23 @@ public class UserWindow {
                     user.listOfAuthors();
                     break;
                 }
+                case "myBookmarks":{
+                    user.myBookmarks();
+                    break;
+                }
                 case "addBookmark":{
                     user.addBookmark();
+                    break;
+                }
+                case "removeBookmark":{
+                    String bookName;
+                    int pageNum;
+                    log.info("BookName: ");
+                    bookName = scanner.nextLine();
+                    log.info("Page you want to remove your bookmark from: ");
+                    pageNum = scanner.nextInt();
+                    scanner = new Scanner(System.in);
+                    user.removeBookmark(bookName, pageNum);
                     break;
                 }
                 case "addAuthor": {
@@ -205,7 +222,9 @@ public class UserWindow {
                     log.info("addUser - to add new user");
                     log.info("listOfBooks - list of books in the library");
                     log.info("listOfAuthors - list of authors in the library");
+                    log.info("myBookmarks - my bookmarks");
                     log.info("addBookmark - to add bookmark");
+                    log.info("removeBookmark - remove bookmark");
                     log.info("addAuthor - to add a new author");
                     log.info("addBook - to add some boox");
                     log.info("removeBook - to remove book");
@@ -221,8 +240,23 @@ public class UserWindow {
                     user.listOfAuthors();
                     break;
                 }
+                case "myBookmarks":{
+                    user.myBookmarks();
+                    break;
+                }
                 case "addBookmark":{
                     user.addBookmark();
+                    break;
+                }
+                case "removeBookmark":{
+                    String bookName;
+                    int pageNum;
+                    log.info("BookName: ");
+                    bookName = scanner.nextLine();
+                    log.info("Page you want to remove your bookmark from: ");
+                    pageNum = scanner.nextInt();
+                    scanner = new Scanner(System.in);
+                    user.removeBookmark(bookName, pageNum);
                     break;
                 }
                 case "addUser":

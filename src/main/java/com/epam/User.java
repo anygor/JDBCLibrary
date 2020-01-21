@@ -3,8 +3,6 @@ package com.epam;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Scanner;
-
 
 public class User {
     int userID;
@@ -62,6 +60,16 @@ public class User {
 
     public void addBookmark(){
         userDAO = new UserDAO(userID);
-        userDAO.addBookMark();
+        userDAO.addBookmark();
+    }
+
+    public void myBookmarks(){
+        userDAO = new UserDAO(userID);
+        userDAO.myBookmarks();
+    }
+
+    public void removeBookmark(String bookName, int pageNum){
+        userDAO = new UserDAO(userID);
+        userDAO.removeBookmark(bookName, pageNum);
     }
 }
