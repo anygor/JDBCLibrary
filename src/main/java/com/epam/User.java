@@ -51,4 +51,14 @@ public class User {
         userDAO = new UserDAO();
         userDAO.removeAuthor(author);
     }
+
+    public void listOfBooks(){
+        userDAO = new UserDAO();
+        userDAO.listOfBooks();
+    }
+
+    public void listOfAuthors(){
+        userDAO = new UserDAO();
+        userDAO.listOfAuthors();
+    }
 }

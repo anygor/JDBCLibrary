@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Random;
 import java.util.Scanner;
 
 public class UserDAO {
@@ -42,6 +41,34 @@ public class UserDAO {
         }
         catch(SQLException e){
             log.error("setUser exception, " + e);
+        }
+    }
+
+    public void listOfBooks(){
+        try{
+            SQL = "SELECT bookName FROM Books WHERE isDeleted = 'False'";
+            pst = connection.prepareStatement(SQL);
+            rs = pst.executeQuery();
+            while(rs.next()){
+                log.info(rs.getString(1));
+            }
+        }
+        catch(SQLException e){
+            log.error("listOfBooks exception sql");
+        }
+    }
+
+    public void listOfAuthors(){
+        try{
+            SQL = "SELECT * FROM Authors WHERE isDeleted = 'False'";
+            pst = connection.prepareStatement(SQL);
+            rs = pst.executeQuery();
+            while(rs.next()){
+                log.info(rs.getInt(1) + ". " + rs.getString(2) + " " + rs.getString(4));
+            }
+        }
+        catch(SQLException e){
+            log.error("listOfAuthors exception");
         }
     }
 

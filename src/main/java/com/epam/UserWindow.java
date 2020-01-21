@@ -123,43 +123,60 @@ public class UserWindow {
         String command;
         scanner = new Scanner(System.in);
 
+        label:
         while(true) {
             command = scanner.nextLine();
-            if(command.equals("help")){
-                log.info("list of supported commands:");
-                log.info("help - stop it, get some help");
-                log.info("addAuthor - to add a new author");
-                log.info("addBook - to add some boox");
-                log.info("removeBook - to remove book");
-                log.info("removeAuthor - to remove author and their books");
-                log.info("quit - to quit");
+            switch (command) {
+                case "help": {
+                    log.info("list of supported commands:");
+                    log.info("help - stop it, get some help");
+                    log.info("listOfBooks - list of books");
+                    log.info("listOfAuthors - list of authors");
+                    log.info("addAuthor - to add a new author");
+                    log.info("addBook - to add some boox");
+                    log.info("removeBook - to remove book");
+                    log.info("removeAuthor - to remove author and their books");
+                    log.info("quit - to quit");
+                    break;
+                }
+                case "listOfBooks":{
+                    user.listOfBooks();
+                    break;
+                }
+                case "listOfAuthors":{
+                    user.listOfAuthors();
+                    break;
+                }
+                case "addAuthor": {
+                    String author;
+                    log.info("Author FN/SN/LN: ");
+                    author = scanner.nextLine();
+                    user.addAuthor(author);
+                    break;
+                }
+                case "addBook":
+                    user.addBook();
+                    break;
+                case "removeBook":
+                    String bookName;
+                    log.info("Book name:");
+                    bookName = scanner.nextLine();
+                    user.removeBook(bookName);
+                    break;
+                case "removeAuthor": {
+                    String author;
+                    log.info("Author FN/SN/LN: ");
+                    author = scanner.nextLine();
+                    user.removeAuthor(author);
+                    break;
+                }
+                case "quit":
+                    log.info("Goodbye.");
+                    break label;
+                default:
+                    log.info("invalid command");
+                    break;
             }
-            else if (command.equals("addAuthor")){
-                String author;
-                log.info("Author FN/SN/LN: ");
-                author = scanner.nextLine();
-                user.addAuthor(author);
-            }
-            else if(command.equals("addBook")){
-                user.addBook();
-            }
-            else if(command.equals("removeBook")){
-                String bookName;
-                log.info("Book name:");
-                bookName = scanner.nextLine();
-                user.removeBook(bookName);
-            }
-            else if(command.equals("removeAuthor")){
-                String author;
-                log.info("Author FN/SN/LN: ");
-                author = scanner.nextLine();
-                user.removeAuthor(author);
-            }
-            else if (command.equals("quit")) {
-                log.info("Goodbye.");
-                break;
-            }
-            else log.info("The cycle proceeds");
         }
     }
 
@@ -173,47 +190,63 @@ public class UserWindow {
         String command;
         scanner = new Scanner(System.in);
 
+        label:
         while(true) {
             command = scanner.nextLine();
-            if(command.equals("help")){
-                log.info("list of supported commands:");
-                log.info("help - stop it, get some help");
-                log.info("addBook - to add some boox");
-                log.info("addAuthor - to add a new author");
-                log.info("addUser - to add some new user");
-                log.info("removeBook - to remove book");
-                log.info("removeAuthor - to remove author and their books");
-                log.info("quit - to quit");
+            switch (command) {
+                case "help": {
+                    log.info("list of supported commands:");
+                    log.info("help - stop it, get some help");
+                    log.info("listOfBooks - list of books");
+                    log.info("listOfAuthors - list of authors");
+                    log.info("addAuthor - to add a new author");
+                    log.info("addBook - to add some boox");
+                    log.info("removeBook - to remove book");
+                    log.info("removeAuthor - to remove author and their books");
+                    log.info("quit - to quit");
+                    break;
+                }
+                case "listOfBooks":{
+                    user.listOfBooks();
+                    break;
+                }
+                case "listOfAuthors":{
+                    user.listOfAuthors();
+                    break;
+                }
+                case "addUser":
+                    user.addUser();
+                    break;
+                case "addAuthor": {
+                    String author;
+                    log.info("Author FN/SN/LN: ");
+                    author = scanner.nextLine();
+                    user.addAuthor(author);
+                    break;
+                }
+                case "addBook":
+                    user.addBook();
+                    break;
+                case "removeBook":
+                    String bookName;
+                    log.info("Book name:");
+                    bookName = scanner.nextLine();
+                    user.removeBook(bookName);
+                    break;
+                case "removeAuthor": {
+                    String author;
+                    log.info("Author FN/SN/LN: ");
+                    author = scanner.nextLine();
+                    user.removeAuthor(author);
+                    break;
+                }
+                case "quit":
+                    log.info("Goodbye.");
+                    break label;
+                default:
+                    log.info("invalid command");
+                    break;
             }
-            else if (command.equals("addUser")){
-                user.addUser();
-            }
-            else if (command.equals("addAuthor")){
-                String author;
-                log.info("Author FN/SN/LN: ");
-                author = scanner.nextLine();
-                user.addAuthor(author);
-            }
-            else if(command.equals("addBook")){
-                user.addBook();
-            }
-            else if(command.equals("removeBook")){
-                String bookName;
-                log.info("Book name:");
-                bookName = scanner.nextLine();
-                user.removeBook(bookName);
-            }
-            else if(command.equals("removeAuthor")){
-                String author;
-                log.info("Author FN/SN/LN: ");
-                author = scanner.nextLine();
-                user.removeAuthor(author);
-            }
-            else if (command.equals("quit")) {
-                log.info("Goodbye.");
-                break;
-            }
-            else log.info("invalid command");
         }
     }
 }
