@@ -19,8 +19,10 @@ public class UserDAO {
     String SQL;
     PreparedStatement pst;
     ResultSet rs;
+    AuthorDAO authorDAO;
 
     public UserDAO(){
+        authorDAO = new AuthorDAO();
         connection = UserWindow.connection;
         SQL = UserWindow.SQL;
     }
@@ -48,37 +50,6 @@ public class UserDAO {
         }
         catch(SQLException e){
             log.error("setUser exception, " + e);
-        }
-    }
-
-    public void listOfBooks(){
-        try{
-            SQL = "SELECT bookName FROM Books WHERE isDeleted = 'False'";
-            pst = connection.prepareStatement(SQL);
-            rs = pst.executeQuery();
-            while(rs.next()){
-                log.info(rs.getString(1));
-            }
-        }
-        catch(SQLException e){
-            log.error("listOfBooks exception sql");
-        }
-    }
-
-    public void listOfAuthors(){
-        try{
-            SQL = "SELECT * FROM Authors WHERE isDeleted = 'False'";
-            pst = connection.prepareStatement(SQL);
-            rs = pst.executeQuery();
-            while(rs.next()){
-                if(!rs.getString(3).equals("null")) {
-                    log.info(rs.getInt(1) + ". " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4));
-                }
-                else log.info(rs.getInt(1) + ". " + rs.getString(2) + " " + rs.getString(4));
-            }
-        }
-        catch(SQLException e){
-            log.error("listOfAuthors exception");
         }
     }
 
@@ -126,40 +97,6 @@ public class UserDAO {
         }
     }
 
-    private boolean authorExists(String author){
-        String[] authorStrings = author.split(" ");
-        String authorFirstName;
-        String authorSecondName;
-        String authorLastName;
-        if(authorStrings.length == 2){
-            authorFirstName = authorStrings[0];
-            authorLastName = authorStrings[1];
-        }
-        else{
-            authorFirstName = authorStrings[0];
-            authorLastName = authorStrings[2];
-        }
-        try {
-            connection = UserWindow.connection;
-            SQL = "SELECT COUNT(*) FROM Authors WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "'";
-            pst = connection.prepareStatement(SQL);
-            rs = pst.executeQuery();
-            rs.next();
-            if(rs.getInt(1) == 0){
-                log.info("No such author, author will be added");
-                return false;
-            }
-            else {
-                log.info("Author is already in the library");
-                return true;
-            }
-        }
-        catch(SQLException e){
-            log.error("AuthorExistsCheckError");
-            return false;
-        }
-    }
-
     private String generateISBN() {
         try{
             SQL = "SELECT ISBN FROM Books ORDER BY ISBN DESC";
@@ -192,7 +129,7 @@ public class UserDAO {
             authorLastName = authorStrings[2];
         }
         try{
-            if(authorExists(author)){
+            if(authorDAO.authorExists(author)){
                 SQL = "SELECT authorID FROM Authors WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "'";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
@@ -291,7 +228,7 @@ public class UserDAO {
 
     public void addAuthor(String author){
         stringScanner = new Scanner(System.in);
-        if(authorExists(author)){
+        if(authorDAO.authorExists(author)){
             log.info("Author exists");
         }
         else{
@@ -348,7 +285,7 @@ public class UserDAO {
     }
 
     public void removeAuthor(String author){
-        if(!authorExists(author)){
+        if(!authorDAO.authorExists(author)){
             log.info("No such author");
         }
         else {

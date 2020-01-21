@@ -48,16 +48,6 @@ public class User {
         userDAO.removeAuthor(author);
     }
 
-    public void listOfBooks(){
-        userDAO = new UserDAO();
-        userDAO.listOfBooks();
-    }
-
-    public void listOfAuthors(){
-        userDAO = new UserDAO();
-        userDAO.listOfAuthors();
-    }
-
     public void addBookmark(){
         userDAO = new UserDAO(userID);
         userDAO.addBookmark();

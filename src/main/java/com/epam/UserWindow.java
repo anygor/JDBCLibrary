@@ -143,11 +143,12 @@ public class UserWindow {
                     break;
                 }
                 case "listOfBooks":{
-                    user.listOfBooks();
+                    BookDAO bookDAO = new BookDAO();
+                    bookDAO.listOfBooks();
                     break;
                 }
                 case "listOfAuthors":{
-                    user.listOfAuthors();
+                    new AuthorDAO().listOfAuthors();
                     break;
                 }
                 case "myBookmarks":{
@@ -233,11 +234,11 @@ public class UserWindow {
                     break;
                 }
                 case "listOfBooks":{
-                    user.listOfBooks();
+                    new BookDAO().listOfBooks(); // todo
                     break;
                 }
                 case "listOfAuthors":{
-                    user.listOfAuthors();
+                    new AuthorDAO().listOfAuthors(); // todo
                     break;
                 }
                 case "myBookmarks":{
