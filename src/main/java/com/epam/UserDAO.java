@@ -25,6 +25,12 @@ public class UserDAO {
         SQL = UserWindow.SQL;
     }
 
+    public UserDAO(int _userID){
+        userID = _userID;
+        connection = UserWindow.connection;
+        SQL = UserWindow.SQL;
+    }
+
     public void setUser(User user, String username){
         connection = UserWindow.connection;
         SQL = UserWindow.SQL;
@@ -33,6 +39,7 @@ public class UserDAO {
             pst = connection.prepareStatement(SQL);
             rs = pst.executeQuery();
             rs.next();
+            user.userID = rs.getInt(1);
             user.name = rs.getString(2);
             user.secondName = rs.getString(3);
             user.lastName = rs.getString(4);
@@ -64,7 +71,10 @@ public class UserDAO {
             pst = connection.prepareStatement(SQL);
             rs = pst.executeQuery();
             while(rs.next()){
-                log.info(rs.getInt(1) + ". " + rs.getString(2) + " " + rs.getString(4));
+                if(!rs.getString(3).equals("null")) {
+                    log.info(rs.getInt(1) + ". " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4));
+                }
+                else log.info(rs.getInt(1) + ". " + rs.getString(2) + " " + rs.getString(4));
             }
         }
         catch(SQLException e){
@@ -366,6 +376,36 @@ public class UserDAO {
             }
             catch(SQLException e){
                 log.error("author remove error");
+            }
+        }
+    }
+
+    public void addBookMark(){
+        log.info("Book name to add a bookmark to: ");
+        stringScanner = new Scanner(System.in);
+        String bookName = stringScanner.nextLine();
+        if(!bookExists(bookName)){
+            log.info("No such book in your library");
+        }
+        else {
+            log.info("Page number where your bookmark will be at: ");
+            numberScanner = new Scanner(System.in);
+            int page = numberScanner.nextInt();
+            try {
+                SQL = "SELECT pageCount, ISBN FROM Books WHERE bookName = '" + bookName + "'";
+                pst = connection.prepareStatement(SQL);
+                rs = pst.executeQuery();
+                rs.next();
+                if (rs.getInt(1) < page) {
+                    log.info("This book can't have that bookmark");
+                } else {
+                    SQL = "INSERT INTO Bookmarks (userID, ISBN, pageNum) VALUES (" + this.userID + ", '" + rs.getString(2) + "', " + page + ")";
+                    pst = connection.prepareStatement(SQL);
+                    rs = pst.executeQuery();
+                    log.info("bookmark added");
+                }
+            } catch (SQLException e) {
+                log.error("addBookmarksqlexception");
             }
         }
     }

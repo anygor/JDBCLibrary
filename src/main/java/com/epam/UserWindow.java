@@ -130,8 +130,9 @@ public class UserWindow {
                 case "help": {
                     log.info("list of supported commands:");
                     log.info("help - stop it, get some help");
-                    log.info("listOfBooks - list of books");
-                    log.info("listOfAuthors - list of authors");
+                    log.info("listOfBooks - list of books in the library");
+                    log.info("listOfAuthors - list of authors in the library");
+                    log.info("addBookmark - to add bookmark");
                     log.info("addAuthor - to add a new author");
                     log.info("addBook - to add some boox");
                     log.info("removeBook - to remove book");
@@ -145,6 +146,10 @@ public class UserWindow {
                 }
                 case "listOfAuthors":{
                     user.listOfAuthors();
+                    break;
+                }
+                case "addBookmark":{
+                    user.addBookmark();
                     break;
                 }
                 case "addAuthor": {
@@ -197,8 +202,10 @@ public class UserWindow {
                 case "help": {
                     log.info("list of supported commands:");
                     log.info("help - stop it, get some help");
-                    log.info("listOfBooks - list of books");
-                    log.info("listOfAuthors - list of authors");
+                    log.info("addUser - to add new user");
+                    log.info("listOfBooks - list of books in the library");
+                    log.info("listOfAuthors - list of authors in the library");
+                    log.info("addBookmark - to add bookmark");
                     log.info("addAuthor - to add a new author");
                     log.info("addBook - to add some boox");
                     log.info("removeBook - to remove book");
@@ -212,6 +219,10 @@ public class UserWindow {
                 }
                 case "listOfAuthors":{
                     user.listOfAuthors();
+                    break;
+                }
+                case "addBookmark":{
+                    user.addBookmark();
                     break;
                 }
                 case "addUser":

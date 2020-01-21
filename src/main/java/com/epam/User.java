@@ -7,14 +7,12 @@ import java.util.Scanner;
 
 
 public class User {
-    private int userID;
+    int userID;
     String name;
     String secondName;
     String lastName;
     boolean isAdmin;
     boolean isActive;
-    Scanner stringScanner;
-    Scanner numberScanner;
     UserDAO userDAO;
     private static final Logger log = LogManager.getLogger();
 
@@ -60,5 +58,10 @@ public class User {
     public void listOfAuthors(){
         userDAO = new UserDAO();
         userDAO.listOfAuthors();
+    }
+
+    public void addBookmark(){
+        userDAO = new UserDAO(userID);
+        userDAO.addBookMark();
     }
 }

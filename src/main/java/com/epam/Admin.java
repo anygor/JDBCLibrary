@@ -7,6 +7,7 @@ public class Admin extends User {
     private static final Logger log = LogManager.getLogger();
     AdminDAO adminDAO;
     public Admin(User user){
+        userID = user.userID;
         name = user.name;
         secondName = user.secondName;
         lastName = user.lastName;
