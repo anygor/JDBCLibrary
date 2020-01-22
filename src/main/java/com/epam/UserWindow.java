@@ -58,8 +58,6 @@ public class UserWindow {
         while(!loggedIn) {
             try {
                 userDataInput();
-                //username = "asgordeev";
-                //password = "password";
                 SQL = "SELECT * FROM Users WHERE login = '" + username + "'";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
@@ -151,23 +149,16 @@ public class UserWindow {
                     new AuthorDAO().listOfAuthors();
                     break;
                 }
-                case "myBookmarks":{
-                    user.myBookmarks();
+                case "myBookmarks": {
+                    new Bookmark(user.userID).myBookmarks();
                     break;
                 }
-                case "addBookmark":{
-                    user.addBookmark();
+                case "addBookmark": {
+                    new Bookmark(user.userID).addBookmark();
                     break;
                 }
-                case "removeBookmark":{
-                    String bookName;
-                    int pageNum;
-                    log.info("BookName: ");
-                    bookName = scanner.nextLine();
-                    log.info("Page you want to remove your bookmark from: ");
-                    pageNum = scanner.nextInt();
-                    scanner = new Scanner(System.in);
-                    user.removeBookmark(bookName, pageNum);
+                case "removeBookmark": {
+                    new Bookmark(user.userID).removeBookmark();
                     break;
                 }
                 case "addAuthor": {
@@ -236,22 +227,15 @@ public class UserWindow {
                     break;
                 }
                 case "myBookmarks": {
-                    user.myBookmarks();
+                    new Bookmark(user.userID).myBookmarks();
                     break;
                 }
                 case "addBookmark": {
-                    user.addBookmark();
+                    new Bookmark(user.userID).addBookmark();
                     break;
                 }
                 case "removeBookmark": {
-                    String bookName;
-                    int pageNum;
-                    log.info("BookName: ");
-                    bookName = scanner.nextLine();
-                    log.info("Page you want to remove your bookmark from: ");
-                    pageNum = scanner.nextInt();
-                    scanner = new Scanner(System.in);
-                    user.removeBookmark(bookName, pageNum);
+                    new Bookmark(user.userID).removeBookmark();
                     break;
                 }
                 case "addUser": {

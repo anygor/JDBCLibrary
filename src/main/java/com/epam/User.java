@@ -27,19 +27,4 @@ public class User {
         userDAO = new UserDAO();
         userDAO.setUser(this, username);
     }
-
-    public void addBookmark(){
-        userDAO = new UserDAO(userID);
-        userDAO.addBookmark();
-    }
-
-    public void myBookmarks(){
-        userDAO = new UserDAO(userID);
-        userDAO.myBookmarks();
-    }
-
-    public void removeBookmark(String bookName, int pageNum){
-        userDAO = new UserDAO(userID);
-        userDAO.removeBookmark(bookName, pageNum);
-    }
 }
