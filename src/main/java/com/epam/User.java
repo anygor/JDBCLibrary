@@ -28,26 +28,6 @@ public class User {
         userDAO.setUser(this, username);
     }
 
-    public void addBook(){
-        userDAO = new UserDAO();
-        userDAO.addBook();
-    }
-
-    public void addAuthor(String author){
-        userDAO = new UserDAO();
-        userDAO.addAuthor(author);
-    }
-
-    public void removeBook(String bookName){
-        userDAO = new UserDAO();
-        userDAO.removeBook(bookName);
-    }
-
-    public void removeAuthor(String author){
-        userDAO = new UserDAO();
-        userDAO.removeAuthor(author);
-    }
-
     public void addBookmark(){
         userDAO = new UserDAO(userID);
         userDAO.addBookmark();

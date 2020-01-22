@@ -171,30 +171,24 @@ public class UserWindow {
                     break;
                 }
                 case "addAuthor": {
-                    String author;
-                    log.info("Author FN/SN/LN: ");
-                    author = scanner.nextLine();
-                    user.addAuthor(author);
+                    new Author().addAuthor();
                     break;
                 }
-                case "addBook":
-                    user.addBook();
+                case "addBook": {
+                    new Book().addBook();
                     break;
-                case "removeBook":
-                    String bookName;
-                    log.info("Book name:");
-                    bookName = scanner.nextLine();
-                    user.removeBook(bookName);
+                }
+                case "removeBook": {
+                    new Book().removeBook();
                     break;
+                }
                 case "removeAuthor": {
-                    String author;
-                    log.info("Author FN/SN/LN: ");
-                    author = scanner.nextLine();
-                    user.removeAuthor(author);
+                    new Author().removeAuthor();
                     break;
                 }
                 case "quit":
                     log.info("Goodbye.");
+                    closeConnection();
                     break label;
                 default:
                     log.info("invalid command");
@@ -233,23 +227,23 @@ public class UserWindow {
                     log.info("quit - to quit");
                     break;
                 }
-                case "listOfBooks":{
-                    new BookDAO().listOfBooks(); // todo
+                case "listOfBooks": {
+                    new Book().listOfBooks();
                     break;
                 }
-                case "listOfAuthors":{
-                    new AuthorDAO().listOfAuthors(); // todo
+                case "listOfAuthors": {
+                    new Author().listOfAuthors();
                     break;
                 }
-                case "myBookmarks":{
+                case "myBookmarks": {
                     user.myBookmarks();
                     break;
                 }
-                case "addBookmark":{
+                case "addBookmark": {
                     user.addBookmark();
                     break;
                 }
-                case "removeBookmark":{
+                case "removeBookmark": {
                     String bookName;
                     int pageNum;
                     log.info("BookName: ");
@@ -260,39 +254,43 @@ public class UserWindow {
                     user.removeBookmark(bookName, pageNum);
                     break;
                 }
-                case "addUser":
+                case "addUser": {
                     user.addUser();
                     break;
+                }
                 case "addAuthor": {
-                    String author;
-                    log.info("Author FN/SN/LN: ");
-                    author = scanner.nextLine();
-                    user.addAuthor(author);
+                    new Author().addAuthor();
                     break;
                 }
-                case "addBook":
-                    user.addBook();
+                case "addBook": {
+                    new Book().addBook();
                     break;
-                case "removeBook":
-                    String bookName;
-                    log.info("Book name:");
-                    bookName = scanner.nextLine();
-                    user.removeBook(bookName);
+                }
+                case "removeBook": {
+                    new Book().removeBook();
                     break;
+                }
                 case "removeAuthor": {
-                    String author;
-                    log.info("Author FN/SN/LN: ");
-                    author = scanner.nextLine();
-                    user.removeAuthor(author);
+                    new Author().removeAuthor();
                     break;
                 }
                 case "quit":
                     log.info("Goodbye.");
+                    closeConnection();
                     break label;
                 default:
                     log.info("invalid command");
                     break;
             }
+        }
+    }
+
+    private void closeConnection(){
+        try{
+            connection.close();
+        }
+        catch (SQLException e){
+            log.error("close connection error");
         }
     }
 }
