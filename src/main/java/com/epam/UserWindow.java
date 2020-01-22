@@ -137,6 +137,7 @@ public class UserWindow {
                     log.info("addBook - to add some boox");
                     log.info("removeBook - to remove book");
                     log.info("removeAuthor - to remove author and their books");
+                    log.info("search - to go to search sub-menu");
                     log.info("quit - to quit");
                     break;
                 }
@@ -177,6 +178,10 @@ public class UserWindow {
                     new Author().removeAuthor();
                     break;
                 }
+                case "search": {
+                    new Book().search();
+                    break;
+                }
                 case "quit":
                     log.info("Goodbye.");
                     closeConnection();
@@ -215,6 +220,7 @@ public class UserWindow {
                     log.info("addBook - to add some boox");
                     log.info("removeBook - to remove book");
                     log.info("removeAuthor - to remove author and their books");
+                    log.info("search - to go to search sub-menu");
                     log.info("quit - to quit");
                     break;
                 }
@@ -256,6 +262,10 @@ public class UserWindow {
                 }
                 case "removeAuthor": {
                     new Author().removeAuthor();
+                    break;
+                }
+                case "search": {
+                    new Book().search();
                     break;
                 }
                 case "quit":

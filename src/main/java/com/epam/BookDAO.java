@@ -175,5 +175,73 @@ public class BookDAO {
         }
     }
 
+    public void nameSearch(String bookName){
+        try{
+            SQL = "SELECT bookName FROM Books WHERE bookName LIKE '%" + bookName + "%'";
+            pst = connection.prepareStatement(SQL);
+            rs = pst.executeQuery();
+            while(rs.next())
+                log.info(rs.getString(1));
+        }
+        catch(SQLException e){
+            log.error("namesearch sql exception");
+        }
+    }
 
+    public void authorSearch(String author){
+        try{
+            SQL = "SELECT bookName, (SELECT name FROM Authors WHERE authorID = Books.authorID), (SELECT lastname FROM Authors WHERE authorID = Books.authorID) \n" +
+                    "    FROM Books\n" +
+                    "    WHERE (SELECT name FROM Authors WHERE authorID = Books.authorID) LIKE '%" + author + "%' OR " + "" +
+                    "   (SELECT lastname FROM Authors WHERE authorID = Books.authorID) LIKE '%" + author + "%'";
+            pst = connection.prepareStatement(SQL);
+            rs = pst.executeQuery();
+            while(rs.next())
+                log.info(rs.getString(1) + " by " + rs.getString(2) + " " + rs.getString(3));
+        }
+        catch(SQLException e){
+            log.error("namesearch sql exception");
+        }
+    }
+
+    public void ISBNSearch(String ISBN){
+        try{
+            SQL = "SELECT bookName, ISBN FROM Books WHERE ISBN LIKE '%" + ISBN + "%'";
+            pst = connection.prepareStatement(SQL);
+            rs = pst.executeQuery();
+            while(rs.next())
+                log.info(rs.getString(1) + " - " + rs.getString(2));
+        }
+        catch(SQLException e){
+            log.error("namesearch sql exception");
+        }
+    }
+
+    public void yearSearch(int min, int max){
+        try{
+            SQL = "SELECT bookName, releaseYear FROM Books WHERE releaseYear > " + min + " AND releaseyear < " + max;
+            pst = connection.prepareStatement(SQL);
+            rs = pst.executeQuery();
+            while(rs.next())
+                log.info(rs.getString(1) + " - " + rs.getInt(2));
+        }
+        catch(SQLException e){
+            log.error("namesearch sql exception");
+        }
+    }
+
+    public void multipleSearch(int min, int max, int pageAmount, String author){
+        try{
+            SQL = "SELECT * FROM Books WHERE releaseYear > " + min + " AND releaseyear < " + max  + " AND pageCount = " + pageAmount + " AND\n" +
+                    "                ((SELECT name FROM Authors WHERE authorID = Books.authorID) LIKE '%" + author
+                    + "%' OR (SELECT lastname FROM Authors WHERE authorID = Books.authorID) LIKE '%" + author + "%')";
+            pst = connection.prepareStatement(SQL);
+            rs = pst.executeQuery();
+            while(rs.next())
+                log.info(rs.getString(1) + " - " + rs.getString(2));
+        }
+        catch(SQLException e){
+            log.error("namesearch sql exception");
+        }
+    }
 }
