@@ -37,6 +37,7 @@ public class UserDAO {
             user.lastName = rs.getString(4);
             user.isAdmin = rs.getString(7).equals("Admin");
             user.isActive = rs.getString(8).equals("Active");
+            UserWindow.id = user.userID;
         }
         catch(SQLException e){
             log.error("setUser exception, " + e);

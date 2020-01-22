@@ -16,6 +16,8 @@ public class UserWindow {
     private String URL; // db
     private String USER_NAME; // db
     private String DB_PASSWORD; // db
+    static History history;
+    static int id;
     private static final Logger log = LogManager.getLogger();
 
     static Connection connection;
@@ -39,6 +41,7 @@ public class UserWindow {
 
             Class.forName(property.getProperty("db.driverSetup"));
             connection = DriverManager.getConnection(URL, USER_NAME, DB_PASSWORD);
+            history = new History();
         }
         catch(FileNotFoundException e){
             log.error("config.properties not found, " + e);
@@ -112,6 +115,7 @@ public class UserWindow {
     }
 
     private void menu(User user){
+        history.addToHistory(user.name + " " + user.lastName + " logged in\n");
         log.info("\n\n\n\n");
         log.info("MAIN MENU");
         log.info("Type one of the control commands. To see those type help. ");
@@ -185,6 +189,8 @@ public class UserWindow {
                 case "quit":
                     log.info("Goodbye.");
                     closeConnection();
+                    history.addToHistory("User " + user.name + " " + user.lastName + " logged out\n");
+                    History.fileHistoryOutput();
                     break label;
                 default:
                     log.info("invalid command");

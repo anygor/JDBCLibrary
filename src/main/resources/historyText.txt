@@ -1,0 +1,7 @@
+James Cash logged in
+User James Cash added a bookmark
+James Cash logged in
+User James Cash removed a bookmark
+User James Cash logged out
+James Cash logged in
+User 2added author Darth VaderUser 2added book Your motherUser 2removed author Darth VaderUser James Cash logged out

@@ -105,6 +105,7 @@ public class AuthorDAO {
                         "('" + (currentMaxID + 1) + "', '" + authorFirstName + "', '" + authorSecondName + "', '" + authorLastName + "', '" + dob + "', '" + "False')";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
+                UserWindow.history.addToHistory("User " + UserWindow.id + " added author " + authorFirstName + " " + authorLastName + "\n");
                 log.info("author added");
             }
             catch(SQLException e){
@@ -138,6 +139,7 @@ public class AuthorDAO {
                 SQL = "UPDATE Authors SET isDeleted = 'True' WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "'";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
+                UserWindow.history.addToHistory("User " + UserWindow.id + " removed author " + authorFirstName + " " + authorLastName + "\n");
                 log.info("Author " + authorFirstName + " " + authorLastName + " removed");
             }
             catch(SQLException e){

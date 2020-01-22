@@ -56,6 +56,7 @@ public class BookDAO {
                         "('" + bookName + "', '" + releaseYear + "', '" + authorID + "', '" + pageCount + "', '" + ISBN + "', '" + publisherID + "', 'False')";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
+                UserWindow.history.addToHistory("User " + UserWindow.id + " added book " + bookName + "\n");
             } catch (SQLException e) {
                 log.error("Add book sql mistake");
             }
@@ -164,6 +165,7 @@ public class BookDAO {
                 SQL = "UPDATE BOOKS SET isDeleted = 'True' WHERE bookName = '" + bookName + "'";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
+                UserWindow.history.addToHistory("User " + UserWindow.id + " removed book " + bookName + "\n");
                 log.info("Book " + bookName + " removed");
             }
             else{

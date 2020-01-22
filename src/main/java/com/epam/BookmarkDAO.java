@@ -47,6 +47,7 @@ public class BookmarkDAO {
                     SQL = "INSERT INTO Bookmarks (userID, ISBN, pageNum, isDeleted) VALUES (" + this.userID + ", '" + rs.getString(2) + "', " + page + ", 'False')";
                     pst = connection.prepareStatement(SQL);
                     rs = pst.executeQuery();
+                    UserWindow.history.addToHistory("User with ID " + this.userID + " added a bookmark: " + bookName + " -" + page + "\n");
                     log.info("bookmark added");
                 }
             } catch (SQLException e) {
@@ -85,6 +86,7 @@ public class BookmarkDAO {
                         bookName + "' AND pageNum = " + pageNum + " AND userID = " + this.userID + ")";
                 pst = connection.prepareStatement(SQL);
                 rs = pst.executeQuery();
+                UserWindow.history.addToHistory("User with id " + this.userID + " removed a bookmark: " + bookName + " - " + pageNum + "\n");
                 log.info("Bookmark removed");
             }
             catch(SQLException e){
