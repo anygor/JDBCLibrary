@@ -39,7 +39,39 @@ public class AdminDAO extends UserDAO{
         catch(SQLException e){
             log.error("User addition SQL error");
         }
+    }
 
+    public void blockUser(){
+        scanner = new Scanner(System.in);
+        log.info("username to block:");
+        String username = scanner.nextLine();
+        try{
+            if(userExists(username)){
+                SQL = "UPDATE Users SET status = 'Blocked' WHERE login = '" + username + "'";
+                pst = connection.prepareStatement(SQL);
+                rs = pst.executeQuery();
+                log.info("User blocked");
+            }
+            else log.info("no such user");
+        }
+        catch(SQLException e){
+            log.error("blocusersqlexception");
+        }
+    }
+
+    private boolean userExists(String username){
+        try{
+            SQL = "SELECT COUNT(*) FROM Users WHERE login = '" + username + "'";
+            pst = connection.prepareStatement(SQL);
+            rs = pst.executeQuery();
+            rs.next();
+            if (rs.getInt(1) == 0) return false;
+            else return true;
+        }
+        catch(SQLException e) {
+            log.error("userExistsSQLException");
+            return false;
+        }
     }
 
     private int currentMaxUserID(){

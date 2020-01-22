@@ -211,6 +211,7 @@ public class UserWindow {
                     log.info("list of supported commands:");
                     log.info("help - stop it, get some help");
                     log.info("addUser - to add new user");
+                    log.info("blockUser - to block user");
                     log.info("listOfBooks - list of books in the library");
                     log.info("listOfAuthors - list of authors in the library");
                     log.info("myBookmarks - my bookmarks");
@@ -246,6 +247,10 @@ public class UserWindow {
                 }
                 case "addUser": {
                     user.addUser();
+                    break;
+                }
+                case "blockUser" : {
+                    user.blockUser();
                     break;
                 }
                 case "addAuthor": {
