@@ -1,7 +1,6 @@
 James Cash logged in
-User James Cash added a bookmark
-James Cash logged in
-User James Cash removed a bookmark
+User 2 added author Radaman Karadzic
+User 2 added book Bog je Serb
+User 2 removed author Radaman Karadzic
 User James Cash logged out
-James Cash logged in
-User 2added author Darth VaderUser 2added book Your motherUser 2removed author Darth VaderUser James Cash logged out
+User Andrey Gordeev logged out

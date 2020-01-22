@@ -200,6 +200,7 @@ public class UserWindow {
     }
 
     private void menu(Admin user){
+        history.addToHistory(user.name + " " + user.lastName + " logged in\n");
         log.info("\n\n\n\n");
         log.info("MAIN MENU");
         log.info("Type one of the control commands. To see those type help. ");
@@ -216,6 +217,7 @@ public class UserWindow {
                 case "help": {
                     log.info("list of supported commands:");
                     log.info("help - stop it, get some help");
+                    log.info("showHistory - show history of activity");
                     log.info("addUser - to add new user");
                     log.info("blockUser - to block user");
                     log.info("listOfBooks - list of books in the library");
@@ -233,6 +235,10 @@ public class UserWindow {
                 }
                 case "listOfBooks": {
                     new Book().listOfBooks();
+                    break;
+                }
+                case "showHistory":{
+                    user.showHistory();
                     break;
                 }
                 case "listOfAuthors": {
@@ -282,6 +288,8 @@ public class UserWindow {
                 case "quit":
                     log.info("Goodbye.");
                     closeConnection();
+                    history.addToHistory("User " + user.name + " " + user.lastName + " logged out\n");
+                    History.fileHistoryOutput();
                     break label;
                 default:
                     log.info("invalid command");

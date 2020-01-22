@@ -53,5 +53,10 @@ public class History {
     public void addToHistory(String s){
         history.add(s);
     }
+    public void showHistory(){
+        for (String message: history) {
+            log.info(message);
+        }
+    }
 
 }

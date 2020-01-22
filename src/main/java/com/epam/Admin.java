@@ -21,4 +21,8 @@ public class Admin extends User {
         adminDAO = new AdminDAO();
         adminDAO.blockUser();
     }
+
+    public void showHistory(){
+        UserWindow.history.showHistory();
+    }
 }
