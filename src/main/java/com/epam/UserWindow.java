@@ -158,6 +158,12 @@ public class UserWindow {
                     new AuthorDAO().listOfAuthors();
                     break;
                 }
+                case "json" :{
+                    Book book = new Book("Knizhka iz epama", 1990, "Evgenii Kuritsyn", 300, "Kitty Inc");
+                    book.bookJson();
+                    //book.jsonBook(book);
+                    break;
+                }
                 case "myBookmarks": {
                     new Bookmark(user.userID).myBookmarks();
                     break;

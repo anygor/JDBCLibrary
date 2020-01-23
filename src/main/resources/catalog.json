@@ -1,0 +1,41 @@
+[
+  {
+    "bookName": "Стрелок",
+    "releaseYear": 1982,
+    "pageCount": 320,
+    "ISBN": "978-0452261341",
+    "publisher": "Donald M. Grant, Publisher, Inc.",
+    "author": {
+      "name": "Стивен",
+      "secondName": "",
+      "lastName": "Кинг",
+      "dob": "21.09.1947"
+    }
+  },
+  {
+    "bookName": "Извлечение троих",
+    "releaseYear": 1986,
+    "pageCount": 299,
+    "ISBN": "978-0452261342",
+    "publisher": "Donald M. Grant, Publisher, Inc.",
+    "author": {
+      "name": "Стивен",
+      "secondName": "",
+      "lastName": "Кинг",
+      "dob": "21.09.1947"
+    }
+  },
+  {
+    "bookName": "Лабиринт отражений",
+    "releaseYear": 1997,
+    "pageCount": 434,
+    "ISBN": "978-5976212268",
+    "publisher": "АСТ",
+    "author": {
+      "name": "Сергей",
+      "secondName": "Васильевич",
+      "lastName": "Лукьяненко",
+      "dob": "11.04.1986"
+    }
+  }
+]

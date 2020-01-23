@@ -9,12 +9,23 @@ import java.util.Scanner;
 public class Author {
     AuthorDAO authorDAO;
     String authorName;
+    String name;
+    String secondName;
+    String lastName;
+    String dob;
     Scanner scanner;
     private static final Logger log = LogManager.getLogger();
 
     public Author(){
         authorDAO = new AuthorDAO();
         scanner = new Scanner(System.in);
+    }
+
+    public Author(String name, String secondName, String lastName, String dob){
+        this.name = name;
+        this.secondName = secondName;
+        this.lastName = lastName;
+        this.dob = dob;
     }
 
     public void listOfAuthors(){

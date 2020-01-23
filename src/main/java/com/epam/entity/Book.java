@@ -1,9 +1,15 @@
 package com.epam.entity;
 
 import com.epam.dao.BookDAO;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Book {
@@ -15,10 +21,19 @@ public class Book {
     String publisher;
     Scanner scanner;
     private static final Logger log = LogManager.getLogger();
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public Book(){
         bookDAO = new BookDAO();
         scanner = new Scanner(System.in);
+    }
+
+    public Book(String bookName, int releaseYear, String author, int pageCount, String publisher){
+        this.bookName = bookName;
+        this.releaseYear = releaseYear;
+        this.author = author;
+        this.pageCount = pageCount;
+        this.publisher = publisher;
     }
 
     public void addBook(){
@@ -47,6 +62,70 @@ public class Book {
     public void listOfBooks(){
         bookDAO.listOfBooks();
     }
+
+    public void jsonBook(Book book){
+        String json = gson.toJson(book);
+        log.info(json);
+        /* [INFO ] 2020-01-23 14:18:49.506 [main] Book - {
+  "bookName": "Knizhka iz epama",
+  "releaseYear": 1990,
+  "author": "Evgenii Kuritsyn",
+  "pageCount": 300,
+  "publisher": "Kitty Inc"
+} */
+
+        Book book1 = gson.fromJson(json, Book.class);
+    }
+
+    public void bookJson() {
+        BufferedReader in = null;
+        StringBuilder json = new StringBuilder("");
+        try {
+            in = new BufferedReader(new FileReader("src/main/resources/catalog.json"));
+            String buffer;
+            while ((buffer = in.readLine()) != null) {
+                json.append(buffer);
+            }
+            log.info(json);
+            String[] array = json.toString().split("}, {2}\\{");
+            for(int i = 0; i < array.length; i++){
+                parseBooks(array[i]);
+            }
+        }
+         catch (FileNotFoundException e) {
+            log.error("bookjson exception");
+        }
+        catch(IOException e){
+            log.error(e);
+        }
+    }
+
+    private void parseBooks(String json){
+        String _bookName = json.substring(json.indexOf("\"bookName\": \"") + 13, json.indexOf("\",    \"releaseYear\":"));
+        int _releaseYear = Integer.parseInt(json.substring(json.indexOf("\"releaseYear\": ") + 15, json.indexOf(",    \"pageCount\"")));
+        String _author;
+        String name = json.substring(json.indexOf("\"name\": \"") + 9, json.indexOf("\",      \"secondName\": "));
+        String secondName = json.substring(json.indexOf("\"secondName\": \"") + 15, json.indexOf("\",      \"lastName\":"));
+        String lastName = json.substring(json.indexOf("\"lastName\": \"") + 13, json.indexOf("\",      \"dob\""));
+        if(!secondName.equals("")) {
+            _author = name + " " + secondName + " " + lastName;
+        }
+        else{
+            _author = name + " " + lastName;
+        }
+        int _pageCount = Integer.parseInt(json.substring(json.indexOf("\"pageCount\": ") + 13, json.indexOf(",    \"ISBN\"")));
+        String _publisher = json.substring(json.indexOf("\"publisher\": \"") + 14, json.indexOf("\",    \"author\""));
+
+        String _dob = json.substring(json.indexOf("\"dob\": \"") + 8, json.indexOf("\"    }"));
+
+        log.info(_bookName);
+        log.info(_releaseYear);
+        log.info(_author);
+        log.info(_pageCount);
+        log.info(_publisher);
+        log.info(_dob);
+    }
+
 
     public void search(){
         log.info("To search book by name, enter byName");
