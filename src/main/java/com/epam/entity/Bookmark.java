@@ -1,5 +1,6 @@
-package com.epam;
+package com.epam.entity;
 
+import com.epam.dao.BookmarkDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

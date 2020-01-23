@@ -4,3 +4,25 @@ User 2 added book Bog je Serb
 User 2 removed author Radaman Karadzic
 User James Cash logged out
 User Andrey Gordeev logged out
+James Cash logged in
+User 2 removed book HelloKitty
+User 2 removed author Radavan Karadzic
+User 2 removed author Craig Mabbit
+User 2 removed author Corvo Bianco
+User 2 removed author Giovanni Moretti
+User 2 removed author Giovanni Rikolo
+User 2 removed author Alex Tolstoy
+User 2 removed author Kornei Chukovskii
+User 2 removed author Kek Back
+User 2 removed author Mary Watson
+User 2 removed author Hello Kitty
+User 2 removed author Gosha Rubchinsky
+User James Cash logged out
+Andrey Gordeev logged in
+User Andrey Gordeev logged out
+Andrey Gordeev logged in
+User Andrey Gordeev logged out
+James Cash logged in
+User 2 added author Viktor Astafyef
+User 2 added book Vasyutkino ozero
+James Cash logged out

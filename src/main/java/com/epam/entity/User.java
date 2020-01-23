@@ -1,16 +1,17 @@
-package com.epam;
+package com.epam.entity;
 
+import com.epam.dao.UserDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
 public class User {
-    int userID;
-    String name;
-    String secondName;
-    String lastName;
-    boolean isAdmin;
-    boolean isActive;
+    public int userID;
+    public String name;
+    public String secondName;
+    public String lastName;
+    public boolean isAdmin;
+    public boolean isActive;
     UserDAO userDAO;
     private static final Logger log = LogManager.getLogger();
 

@@ -6,6 +6,10 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
 import java.util.Scanner;
+
+import com.epam.dao.AuthorDAO;
+import com.epam.dao.BookDAO;
+import com.epam.entity.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,12 +20,12 @@ public class UserWindow {
     private String URL; // db
     private String USER_NAME; // db
     private String DB_PASSWORD; // db
-    static History history;
-    static int id;
+    public static History history;
+    public static int id;
     private static final Logger log = LogManager.getLogger();
 
-    static Connection connection;
-    static String SQL;
+    public static Connection connection;
+    public static String SQL;
     static PreparedStatement pst;
     static ResultSet rs;
 
@@ -189,7 +193,7 @@ public class UserWindow {
                 case "quit":
                     log.info("Goodbye.");
                     closeConnection();
-                    history.addToHistory("User " + user.name + " " + user.lastName + " logged out\n");
+                    history.addToHistory(user.name + " " + user.lastName + " logged out\n");
                     History.fileHistoryOutput();
                     break label;
                 default:
@@ -288,7 +292,7 @@ public class UserWindow {
                 case "quit":
                     log.info("Goodbye.");
                     closeConnection();
-                    history.addToHistory("User " + user.name + " " + user.lastName + " logged out\n");
+                    history.addToHistory(user.name + " " + user.lastName + " logged out\n");
                     History.fileHistoryOutput();
                     break label;
                 default:

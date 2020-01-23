@@ -1,5 +1,7 @@
-package com.epam;
+package com.epam.dao;
 
+import com.epam.entity.User;
+import com.epam.UserWindow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
