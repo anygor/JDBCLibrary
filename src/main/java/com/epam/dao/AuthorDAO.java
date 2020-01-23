@@ -14,8 +14,6 @@ public class AuthorDAO {
 
     Connection connection;
     String SQL;
-    Statement statement;
-    ResultSet resultSet;
     private static final Logger log = LogManager.getLogger();
 
     public AuthorDAO(){
@@ -23,17 +21,15 @@ public class AuthorDAO {
     }
 
     public void listOfAuthors(){
-        try{
-            statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             SQL = "SELECT * FROM Authors WHERE isDeleted = 'False'";
-            resultSet = statement.executeQuery(SQL);
-            while(resultSet.next()){
-                if(!resultSet.getString(3).equals("null")) {
-                    log.info(resultSet.getInt(1) + ". " + resultSet.getString(2) + " " + resultSet.getString(3) + " " + resultSet.getString(4));
+            try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                while (resultSet.next()) {
+                    if (!resultSet.getString(3).equals("null")) {
+                        log.info(resultSet.getInt(1) + ". " + resultSet.getString(2) + " " + resultSet.getString(3) + " " + resultSet.getString(4));
+                    } else log.info(resultSet.getInt(1) + ". " + resultSet.getString(2) + " " + resultSet.getString(4));
                 }
-                else log.info(resultSet.getInt(1) + ". " + resultSet.getString(2) + " " + resultSet.getString(4));
             }
-            close();
         }
         catch(SQLException e){
             log.error("listOfAuthors exception");
@@ -53,19 +49,17 @@ public class AuthorDAO {
             authorFirstName = authorStrings[0];
             authorLastName = authorStrings[2];
         }
-        try {
-            statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()) {
             SQL = "SELECT COUNT(*) FROM Authors WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "' AND isDeleted = 'False'";
-            resultSet = statement.executeQuery(SQL);
-            resultSet.next();
-            if(resultSet.getInt(1) == 0){
-                log.info("No such author, author will be added");
-                close();
-                return false;
-            }
-            else {
-                log.info("Author is already in the library");
-                return true;
+            try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                resultSet.next();
+                if (resultSet.getInt(1) == 0) {
+                    log.info("No such author, author will be added");
+                    return false;
+                } else {
+                    log.info("Author is already in the library");
+                    return true;
+                }
             }
         }
         catch(SQLException e){
@@ -98,18 +92,19 @@ public class AuthorDAO {
             }
             try {
                 int currentMaxID;
-                statement = connection.createStatement();
-                SQL = "SELECT MAX(authorid) FROM Authors";
-                resultSet = statement.executeQuery(SQL);
-                resultSet.next();
-                currentMaxID = resultSet.getInt(1);
-                statement = connection.createStatement();
-                SQL = "INSERT INTO \"JDBC\".\"AUTHORS\" (AUTHORID, NAME, SECONDNAME, LASTNAME, DOB, ISDELETED) VALUES " +
-                        "('" + (currentMaxID + 1) + "', '" + authorFirstName + "', '" + authorSecondName + "', '" + authorLastName + "', '" + dob + "', '" + "False')";
-                resultSet = statement.executeQuery(SQL);
-                UserWindow.history.addToHistory("User " + UserWindow.id + " added author " + authorFirstName + " " + authorLastName + "\n");
-                log.info("author added");
-                close();
+                try (Statement statement = connection.createStatement()) {
+                    SQL = "SELECT MAX(authorid) FROM Authors";
+                    try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                        resultSet.next();
+                        currentMaxID = resultSet.getInt(1);
+                    }
+                    SQL = "INSERT INTO \"JDBC\".\"AUTHORS\" (AUTHORID, NAME, SECONDNAME, LASTNAME, DOB, ISDELETED) VALUES " +
+                            "('" + (currentMaxID + 1) + "', '" + authorFirstName + "', '" + authorSecondName + "', '" + authorLastName + "', '" + dob + "', '" + "False')";
+                    try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                        UserWindow.history.addToHistory("User " + UserWindow.id + " added author " + authorFirstName + " " + authorLastName + "\n");
+                        log.info("author added");
+                    }
+                }
             }
             catch(SQLException e){
                 log.error("sql exception at addauthor");
@@ -135,17 +130,15 @@ public class AuthorDAO {
                 authorSecondName = authorStrings[1];
                 authorLastName = authorStrings[2];
             }
-            try {
-                statement = connection.createStatement();
+            try(Statement statement = connection.createStatement()) {
                 SQL = "UPDATE Books SET isDeleted = 'True' WHERE authorID = " + authorID(author);
-                resultSet = statement.executeQuery(SQL);
-
-                statement = connection.createStatement();
-                SQL = "UPDATE Authors SET isDeleted = 'True' WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "'";
-                resultSet = statement.executeQuery(SQL);
-                UserWindow.history.addToHistory("User " + UserWindow.id + " removed author " + authorFirstName + " " + authorLastName + "\n");
-                log.info("Author " + authorFirstName + " " + authorLastName + " removed");
-                close();
+                try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                    SQL = "UPDATE Authors SET isDeleted = 'True' WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "'";
+                }
+                 try(ResultSet resultSet = statement.executeQuery(SQL)){
+                    UserWindow.history.addToHistory("User " + UserWindow.id + " removed author " + authorFirstName + " " + authorLastName + "\n");
+                    log.info("Author " + authorFirstName + " " + authorLastName + " removed");
+                }
             }
             catch(SQLException e){
                 log.error("author remove error");
@@ -168,33 +161,28 @@ public class AuthorDAO {
             authorLastName = authorStrings[2];
         }
         try{
-            if(authorExists(author)){
-                statement = connection.createStatement();
-                SQL = "SELECT authorID FROM Authors WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "' AND isDeleted = 'False'";
-                resultSet = statement.executeQuery(SQL);
-                resultSet.next();
-                id = resultSet.getInt(1);
-                return id;
+            if(authorExists(author)) {
+                try (Statement statement = connection.createStatement()) {
+                    SQL = "SELECT authorID FROM Authors WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "' AND isDeleted = 'False'";
+                    try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                        resultSet.next();
+                        id = resultSet.getInt(1);
+                        return id;
+                    }
+                }
             }
             else{
-                statement = connection.createStatement();
-                SQL = "SELECT MAX(authorid) FROM AUTHORS;";
-                resultSet = statement.executeQuery(SQL);
-                id = resultSet.getInt(1) + 1;
-                return id;
+                try(Statement statement = connection.createStatement()) {
+                    SQL = "SELECT MAX(authorid) FROM AUTHORS;";
+                    try(ResultSet resultSet = statement.executeQuery(SQL)){
+                        id = resultSet.getInt(1) + 1;
+                        return id;
+                    }
+                }
             }
         }
         catch(SQLException e){
             return -1;
-        }
-    }
-    private void close(){
-        try {
-            resultSet.close();
-            statement.close();
-        }
-        catch (SQLException e){
-            log.error("I didn't close anything");
         }
     }
 }

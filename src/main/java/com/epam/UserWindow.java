@@ -26,8 +26,6 @@ public class UserWindow {
 
     public static Connection connection;
     public static String SQL;
-    static PreparedStatement pst;
-    static ResultSet rs;
 
     boolean loggedIn = false;
 
@@ -63,19 +61,18 @@ public class UserWindow {
 
     public void login(){
         while(!loggedIn) {
-            try {
+            try (Statement statement = connection.createStatement()){
                 userDataInput();
                 SQL = "SELECT * FROM Users WHERE login = '" + username + "'";
-                pst = connection.prepareStatement(SQL);
-                rs = pst.executeQuery();
-                rs.next();
-                if (rs.getString(5).equals(username) &&
-                        rs.getString(6).equals(password)) {
-                    log.info("login success!");
-                    loggedIn = true;
-                }
-                else{
-                    log.info("Wrong password, try again.");
+                try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                    resultSet.next();
+                    if (resultSet.getString(5).equals(username) &&
+                            resultSet.getString(6).equals(password)) {
+                        log.info("login success!");
+                        loggedIn = true;
+                    } else {
+                        log.info("Wrong password, try again.");
+                    }
                 }
             } catch (SQLException e) {
                 log.info("No such user, try again.");
@@ -91,30 +88,19 @@ public class UserWindow {
         password = scanner.nextLine();
     }
 
-    public void welcome(){
-        try {
-            SQL = "SELECT * FROM Users WHERE login = '" + username + "'";
-            pst = connection.prepareStatement(SQL);
-            rs = pst.executeQuery();
-            rs.next();
-            User user = new User(username);
-            if (!user.isActive) {
-                log.info("Your account has been blocked.");
+    public void welcome() {
+        User user = new User(username);
+        if (!user.isActive) {
+            log.info("Your account has been blocked.");
+        } else {
+            log.info("Welcome, " + user.name + " " + user.lastName + "!");
+            if (user.isAdmin) {
+                log.info("You logged in as administrator");
+                Admin admin = new Admin(user);
+                menu(admin);
+            } else {
+                menu(user);
             }
-            else {
-                log.info("Welcome, " + user.name + " " + user.lastName + "!");
-                if(user.isAdmin){
-                    log.info("You logged in as administrator");
-                    Admin admin = new Admin(user);
-                    menu(admin);
-                }
-                else{
-                    menu(user);
-                }
-            }
-        }
-        catch (SQLException e) {
-            log.error("Welcome SQL exception");
         }
     }
 
@@ -146,6 +132,7 @@ public class UserWindow {
                     log.info("removeBook - to remove book");
                     log.info("removeAuthor - to remove author and their books");
                     log.info("search - to go to search sub-menu");
+                    log.info("json - to get books from catalog.json");
                     log.info("quit - to quit");
                     break;
                 }
@@ -160,7 +147,6 @@ public class UserWindow {
                 }
                 case "json" :{
                     new Book().bookJson();
-                    //book.jsonBook(book);
                     break;
                 }
                 case "myBookmarks": {
@@ -239,6 +225,7 @@ public class UserWindow {
                     log.info("removeBook - to remove book");
                     log.info("removeAuthor - to remove author and their books");
                     log.info("search - to go to search sub-menu");
+                    log.info("json - to get books from catalog.json");
                     log.info("quit - to quit");
                     break;
                 }
@@ -252,6 +239,10 @@ public class UserWindow {
                 }
                 case "listOfAuthors": {
                     new Author().listOfAuthors();
+                    break;
+                }
+                case "json" :{
+                    new Book().bookJson();
                     break;
                 }
                 case "myBookmarks": {

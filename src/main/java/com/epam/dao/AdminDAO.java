@@ -5,10 +5,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.Scanner;
-import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class AdminDAO extends UserDAO{
     Scanner scanner;
@@ -16,7 +14,7 @@ public class AdminDAO extends UserDAO{
 
     public void addUser(){
         scanner = new Scanner(System.in);
-        try{
+        try(Statement statement = connection.createStatement()){
             String name;
             String secondName;
             String lastName;
@@ -35,12 +33,11 @@ public class AdminDAO extends UserDAO{
                 secondName = "null";
             }
             log.info("Username will be " + username);
-            statement = connection.createStatement();
             SQL = "INSERT INTO \"JDBC\".\"USERS\" (USERID, NAME, SECONDNAME, LASTNAME, LOGIN, PASSWORD, ROLE, STATUS) VALUES " +
                     "(" + (currentMaxUserID() + 1) + ", '" + name + "', '" + secondName + "', '" + lastName + "', '" + username + "', '0000', 'User', 'Active')";
-            resultSet = statement.executeQuery(SQL);
-            log.info("Done");
-            close();
+            try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                log.info("Done");
+            }
         }
         catch(SQLException e){
             log.error("User addition SQL error");
@@ -51,13 +48,12 @@ public class AdminDAO extends UserDAO{
         scanner = new Scanner(System.in);
         log.info("username to block:");
         String username = scanner.nextLine();
-        try{
+        try(Statement statement = connection.createStatement()){
             if(userExists(username)){
-                statement = connection.createStatement();
                 SQL = "UPDATE Users SET status = 'Blocked' WHERE login = '" + username + "'";
-                resultSet = statement.executeQuery(SQL);
-                log.info("User blocked");
-                close();
+                try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                    log.info("User blocked");
+                }
             }
             else log.info("no such user");
         }
@@ -67,14 +63,12 @@ public class AdminDAO extends UserDAO{
     }
 
     private boolean userExists(String username){
-        try{
-            statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             SQL = "SELECT COUNT(*) FROM Users WHERE login = '" + username + "'";
-            resultSet = statement.executeQuery(SQL);
-            resultSet.next();
-            if (resultSet.getInt(1) == 0)
-                return false;
-            else return true;
+            try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                resultSet.next();
+                return resultSet.getInt(1) != 0;
+            }
         }
         catch(SQLException e) {
             log.error("userExistsSQLException");
@@ -85,9 +79,9 @@ public class AdminDAO extends UserDAO{
     private int currentMaxUserID(){
         int id;
         try{
-            statement = connection.createStatement();
             SQL = "SELECT userID FROM Users ORDER BY userID DESC";
-            try(ResultSet resultSet = statement.executeQuery(SQL)){
+            try(Statement statement = connection.createStatement();
+                    ResultSet resultSet = statement.executeQuery(SQL)){
                 resultSet.next();
                 id = resultSet.getInt(1);
                 return id;

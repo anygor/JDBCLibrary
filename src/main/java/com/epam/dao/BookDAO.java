@@ -13,8 +13,6 @@ public class BookDAO {
 
     Connection connection;
     String SQL;
-    Statement statement;
-    ResultSet resultSet;
     AuthorDAO authorDAO;
     private static final Logger log = LogManager.getLogger();
 
@@ -23,14 +21,13 @@ public class BookDAO {
     }
 
     public void listOfBooks(){
-        try{
-            statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()) {
             SQL = "SELECT bookName FROM Books WHERE isDeleted = 'False'";
-            resultSet = statement.executeQuery(SQL);
-            while(resultSet.next()){
-                log.info(resultSet.getString(1));
+            try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                while (resultSet.next()) {
+                    log.info(resultSet.getString(1));
+                }
             }
-            close();
         }
         catch(SQLException e){
             log.error("listOfBooks exception sql");
@@ -53,13 +50,11 @@ public class BookDAO {
             log.info("Book is already in your library");
         }
         else {
-            try {
-                statement = connection.createStatement();
+            try (Statement statement = connection.createStatement();){
                 SQL = "INSERT INTO \"JDBC\".\"BOOKS\" (BOOKNAME, RELEASEYEAR, AUTHORID, PAGECOUNT, ISBN, PUBLISHERID, ISDELETED) VALUES " +
                         "('" + bookName + "', '" + releaseYear + "', '" + authorID + "', '" + pageCount + "', '" + ISBN + "', '" + publisherID + "', 'False')";
-                resultSet = statement.executeQuery(SQL);
+                statement.execute(SQL);
                 UserWindow.history.addToHistory("User " + UserWindow.id + " added book " + bookName + "\n");
-                close();
             } catch (SQLException e) {
                 log.error("Add book sql mistake");
             }
@@ -67,17 +62,16 @@ public class BookDAO {
     }
 
     private String generateISBN() {
-        try{
-            statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             SQL = "SELECT ISBN FROM Books ORDER BY ISBN DESC";
-            resultSet = statement.executeQuery(SQL);
-            resultSet.next();
-            String tmp = resultSet.getString(1);
-            tmp = tmp.substring(4);
-            long id = Long.parseLong(tmp);
-            id++;
-            close();
-            return "978-" + id;
+            try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                resultSet.next();
+                String tmp = resultSet.getString(1);
+                tmp = tmp.substring(4);
+                long id = Long.parseLong(tmp);
+                id++;
+                return "978-" + id;
+            }
         }
         catch(SQLException e){
             log.error("generate isbn sqlexeption");
@@ -86,18 +80,11 @@ public class BookDAO {
     }
 
     private boolean publisherExists(String publisher){
-        try{
-            statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             SQL = "SELECT COUNT(*) FROM Publishers WHERE publisherName = '" + publisher + "'";
-            resultSet = statement.executeQuery(SQL);
-            resultSet.next();
-            if(resultSet.getInt(1) != 0){
-                close();
-                return true;
-            }
-            else {
-                close();
-                return false;
+            try (ResultSet resultSet = statement.executeQuery(SQL)) {
+                resultSet.next();
+                return resultSet.getInt(1) != 0;
             }
         }
         catch (SQLException e){
@@ -108,23 +95,21 @@ public class BookDAO {
 
     private int publisherID(String publisher){
         int id;
-        try{
+        try(Statement statement = connection.createStatement()){
             if(publisherExists(publisher)){
-                statement = connection.createStatement();
                 SQL = "SELECT publisherID FROM Publishers WHERE publisherName = '" + publisher + "'";
-                resultSet = statement.executeQuery(SQL);
-                resultSet.next();
-                id = resultSet.getInt(1);
-                close();
-                return id;
+                try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                    resultSet.next();
+                    id = resultSet.getInt(1);
+                    return id;
+                }
             }
             else{
-                statement = connection.createStatement();
                 SQL = "SELECT MAX(publisherID) FROM Publishers;";
-                resultSet = statement.executeQuery(SQL);
-                id =  resultSet.getInt(1) + 1;
-                close();
-                return id;
+                try (ResultSet resultSet = statement.executeQuery(SQL)) {
+                    id = resultSet.getInt(1) + 1;
+                    return id;
+                }
             }
         }
         catch(SQLException e){
@@ -137,18 +122,16 @@ public class BookDAO {
             log.info("publisher exists");
         }
         else{
-            try {
+            try (Statement statement = connection.createStatement()){
                 int currentMaxID;
-                statement = connection.createStatement();
                 SQL = "SELECT MAX(publisherID) FROM Publishers";
-                resultSet = statement.executeQuery(SQL);
-                resultSet.next();
-                currentMaxID = resultSet.getInt(1);
+                try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                    resultSet.next();
+                    currentMaxID = resultSet.getInt(1);
+                }
 
-                statement = connection.createStatement();
                 SQL = "INSERT INTO Publishers (publisherID, publisherName) VALUES (" + (currentMaxID + 1) + ", '" + publisher + "')";
-                resultSet = statement.executeQuery(SQL);
-                close();
+                statement.execute(SQL);
             }
             catch(SQLException e) {
                 log.error("add publisher sql excpetion");
@@ -156,18 +139,13 @@ public class BookDAO {
         }
     }
 
-    public boolean bookExists(String bookName){
-        try {
-            statement = connection.createStatement();
+    public boolean bookExists(String bookName) {
+        try (Statement statement = connection.createStatement()) {
             SQL = "SELECT COUNT(*) FROM Books WHERE bookName = '" + bookName + "' AND isDeleted = 'False'";
-            resultSet = statement.executeQuery(SQL);
-            resultSet.next();
-            int bookAmount = resultSet.getInt(1);
-            close();
-            if (bookAmount == 0) {
-                return false;
-            } else {
-                return true;
+            try (ResultSet resultSet = statement.executeQuery(SQL)) {
+                resultSet.next();
+                int bookAmount = resultSet.getInt(1);
+                return bookAmount != 0;
             }
         }
         catch(SQLException e){
@@ -177,14 +155,13 @@ public class BookDAO {
     }
 
     public void removeBook(String bookName){
-        try {
+        try (Statement statement = connection.createStatement()){
             if (bookExists(bookName)) {
-                statement = connection.createStatement();
                 SQL = "UPDATE BOOKS SET isDeleted = 'True' WHERE bookName = '" + bookName + "'";
-                resultSet = statement.executeQuery(SQL);
-                UserWindow.history.addToHistory("User " + UserWindow.id + " removed book " + bookName + "\n");
-                log.info("Book " + bookName + " removed");
-                close();
+                try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                    UserWindow.history.addToHistory("User " + UserWindow.id + " removed book " + bookName + "\n");
+                    log.info("Book " + bookName + " removed");
+                }
             }
             else{
                 log.info("There is no such book");
@@ -196,13 +173,12 @@ public class BookDAO {
     }
 
     public void nameSearch(String bookName){
-        try{
-            statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             SQL = "SELECT bookName FROM Books WHERE bookName LIKE '%" + bookName + "%' AND isDeleted = 'False'";
-            resultSet = statement.executeQuery(SQL);
-            while(resultSet.next())
-                log.info(resultSet.getString(1));
-            close();
+            try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                while (resultSet.next())
+                    log.info(resultSet.getString(1));
+            }
         }
         catch(SQLException e){
             log.error("namesearch sql exception");
@@ -210,16 +186,15 @@ public class BookDAO {
     }
 
     public void authorSearch(String author){
-        try{
-            statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             SQL = "SELECT bookName, (SELECT name FROM Authors WHERE authorID = Books.authorID), (SELECT lastname FROM Authors WHERE authorID = Books.authorID) \n" +
                     "    FROM Books\n" +
                     "    WHERE isDeleted = 'False' AND (SELECT name FROM Authors WHERE authorID = Books.authorID) LIKE '%" + author + "%' OR " + "" +
                     "   (SELECT lastname FROM Authors WHERE authorID = Books.authorID) LIKE '%" + author + "%'";
-            resultSet = statement.executeQuery(SQL);
-            while(resultSet.next())
-                log.info(resultSet.getString(1) + " by " + resultSet.getString(2) + " " + resultSet.getString(3));
-            close();
+            try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                while (resultSet.next())
+                    log.info(resultSet.getString(1) + " by " + resultSet.getString(2) + " " + resultSet.getString(3));
+            }
         }
         catch(SQLException e){
             log.error("namesearch sql exception");
@@ -227,13 +202,12 @@ public class BookDAO {
     }
 
     public void ISBNSearch(String ISBN){
-        try{
-            statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             SQL = "SELECT bookName, ISBN FROM Books WHERE ISBN LIKE '%" + ISBN + "%'" + " AND isDeleted = 'False'";
-            resultSet = statement.executeQuery(SQL);
-            while(resultSet.next())
-                log.info(resultSet.getString(1) + " - " + resultSet.getString(2));
-            close();
+            try(ResultSet resultSet = statement.executeQuery(SQL)) {
+                while (resultSet.next())
+                    log.info(resultSet.getString(1) + " - " + resultSet.getString(2));
+            }
         }
         catch(SQLException e){
             log.error("namesearch sql exception");
@@ -241,13 +215,12 @@ public class BookDAO {
     }
 
     public void yearSearch(int min, int max){
-        try{
-            statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             SQL = "SELECT bookName, releaseYear FROM Books WHERE releaseYear > " + min + " AND releaseyear < " + max + " AND isDeleted = 'False'";
-            resultSet = statement.executeQuery(SQL);
-            while(resultSet.next())
-                log.info(resultSet.getString(1) + " - " + resultSet.getInt(2));
-            close();
+            try (ResultSet resultSet = statement.executeQuery(SQL)) {
+                while (resultSet.next())
+                    log.info(resultSet.getString(1) + " - " + resultSet.getInt(2));
+            }
         }
         catch(SQLException e){
             log.error("namesearch sql exception");
@@ -255,28 +228,17 @@ public class BookDAO {
     }
 
     public void multipleSearch(int min, int max, int pageAmount, String author){
-        try{
-            statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             SQL = "SELECT * FROM Books WHERE releaseYear > " + min + " AND releaseyear < " + max  + " AND isDeleted = 'False'" + " AND pageCount = " + pageAmount + " AND\n" +
                     "                ((SELECT name FROM Authors WHERE authorID = Books.authorID) LIKE '%" + author
                     + "%' OR (SELECT lastname FROM Authors WHERE authorID = Books.authorID) LIKE '%" + author + "%')";
-            resultSet = statement.executeQuery(SQL);
-            while(resultSet.next())
-                log.info(resultSet.getString(1) + " - " + resultSet.getString(2));
-            close();
+            try (ResultSet resultSet = statement.executeQuery(SQL)) {
+                while (resultSet.next())
+                    log.info(resultSet.getString(1) + " - " + resultSet.getString(2));
+            }
         }
         catch(SQLException e){
             log.error("namesearch sql exception");
-        }
-    }
-
-    private void close(){
-        try {
-            resultSet.close();
-            statement.close();
-        }
-        catch (SQLException e){
-            log.error("I didn't close anything");
         }
     }
 }
