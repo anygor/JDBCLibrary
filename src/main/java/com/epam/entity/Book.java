@@ -53,6 +53,10 @@ public class Book {
         bookDAO.addBook(bookName, releaseYear, author, pageCount, publisher);
     }
 
+    public void addBook(String bookName, int releaseYear, String author, int pageCount, String publisher){
+        bookDAO.addBook(bookName, releaseYear, author, pageCount, publisher);
+    }
+
     public void removeBook(){
         log.info("Book name:");
         bookName = scanner.nextLine();
@@ -66,13 +70,6 @@ public class Book {
     public void jsonBook(Book book){
         String json = gson.toJson(book);
         log.info(json);
-        /* [INFO ] 2020-01-23 14:18:49.506 [main] Book - {
-  "bookName": "Knizhka iz epama",
-  "releaseYear": 1990,
-  "author": "Evgenii Kuritsyn",
-  "pageCount": 300,
-  "publisher": "Kitty Inc"
-} */
 
         Book book1 = gson.fromJson(json, Book.class);
     }
@@ -124,6 +121,7 @@ public class Book {
         log.info(_pageCount);
         log.info(_publisher);
         log.info(_dob);
+        addBook(_bookName, _releaseYear, _author, _pageCount, _publisher);
     }
 
 

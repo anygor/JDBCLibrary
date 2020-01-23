@@ -119,8 +119,8 @@ public class BookmarkDAO {
 
     private void close(){
         try {
-            statement.close();
             resultSet.close();
+            statement.close();
         }
         catch (SQLException e){
             log.error("I didn't close anything");

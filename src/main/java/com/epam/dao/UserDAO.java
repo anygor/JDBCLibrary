@@ -49,8 +49,8 @@ public class UserDAO {
 
     protected void close(){
         try {
-            statement.close();
             resultSet.close();
+            statement.close();
         }
         catch (SQLException e){
             log.error("I didn't close sh*t");

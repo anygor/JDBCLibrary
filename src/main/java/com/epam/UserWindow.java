@@ -159,8 +159,7 @@ public class UserWindow {
                     break;
                 }
                 case "json" :{
-                    Book book = new Book("Knizhka iz epama", 1990, "Evgenii Kuritsyn", 300, "Kitty Inc");
-                    book.bookJson();
+                    new Book().bookJson();
                     //book.jsonBook(book);
                     break;
                 }

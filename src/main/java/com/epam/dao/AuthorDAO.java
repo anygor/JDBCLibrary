@@ -65,7 +65,6 @@ public class AuthorDAO {
             }
             else {
                 log.info("Author is already in the library");
-                close();
                 return true;
             }
         }
@@ -171,11 +170,10 @@ public class AuthorDAO {
         try{
             if(authorExists(author)){
                 statement = connection.createStatement();
-                SQL = "SELECT authorID FROM Authors WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "'";
+                SQL = "SELECT authorID FROM Authors WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "' AND isDeleted = 'False'";
                 resultSet = statement.executeQuery(SQL);
                 resultSet.next();
                 id = resultSet.getInt(1);
-                close();
                 return id;
             }
             else{
@@ -183,7 +181,6 @@ public class AuthorDAO {
                 SQL = "SELECT MAX(authorid) FROM AUTHORS;";
                 resultSet = statement.executeQuery(SQL);
                 id = resultSet.getInt(1) + 1;
-                close();
                 return id;
             }
         }
@@ -193,8 +190,8 @@ public class AuthorDAO {
     }
     private void close(){
         try {
-            statement.close();
             resultSet.close();
+            statement.close();
         }
         catch (SQLException e){
             log.error("I didn't close anything");

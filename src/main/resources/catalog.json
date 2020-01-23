@@ -1,40 +1,40 @@
 [
   {
-    "bookName": "Стрелок",
+    "bookName": "Gunslinger",
     "releaseYear": 1982,
     "pageCount": 320,
     "ISBN": "978-0452261341",
     "publisher": "Donald M. Grant, Publisher, Inc.",
     "author": {
-      "name": "Стивен",
+      "name": "Stephen",
       "secondName": "",
-      "lastName": "Кинг",
+      "lastName": "King",
       "dob": "21.09.1947"
     }
   },
   {
-    "bookName": "Извлечение троих",
+    "bookName": "The Dark Tower",
     "releaseYear": 1986,
     "pageCount": 299,
     "ISBN": "978-0452261342",
     "publisher": "Donald M. Grant, Publisher, Inc.",
     "author": {
-      "name": "Стивен",
+      "name": "Stephen",
       "secondName": "",
-      "lastName": "Кинг",
+      "lastName": "King",
       "dob": "21.09.1947"
     }
   },
   {
-    "bookName": "Лабиринт отражений",
+    "bookName": "Labyrinth of Reflections",
     "releaseYear": 1997,
     "pageCount": 434,
     "ISBN": "978-5976212268",
-    "publisher": "АСТ",
+    "publisher": "ACT",
     "author": {
-      "name": "Сергей",
-      "secondName": "Васильевич",
-      "lastName": "Лукьяненко",
+      "name": "Sergei",
+      "secondName": "Vasilyevich",
+      "lastName": "Lukyanenko",
       "dob": "11.04.1986"
     }
   }

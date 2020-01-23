@@ -5,6 +5,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class AdminDAO extends UserDAO{
     Scanner scanner;
@@ -68,14 +72,9 @@ public class AdminDAO extends UserDAO{
             SQL = "SELECT COUNT(*) FROM Users WHERE login = '" + username + "'";
             resultSet = statement.executeQuery(SQL);
             resultSet.next();
-            if (resultSet.getInt(1) == 0) {
-                close();
+            if (resultSet.getInt(1) == 0)
                 return false;
-            }
-            else {
-                close();
-                return true;
-            }
+            else return true;
         }
         catch(SQLException e) {
             log.error("userExistsSQLException");
@@ -88,11 +87,11 @@ public class AdminDAO extends UserDAO{
         try{
             statement = connection.createStatement();
             SQL = "SELECT userID FROM Users ORDER BY userID DESC";
-            resultSet = statement.executeQuery(SQL);
-            resultSet.next();
-            id = resultSet.getInt(1);
-            close();
-            return id;
+            try(ResultSet resultSet = statement.executeQuery(SQL)){
+                resultSet.next();
+                id = resultSet.getInt(1);
+                return id;
+            }
 
         }
         catch(SQLException e){
