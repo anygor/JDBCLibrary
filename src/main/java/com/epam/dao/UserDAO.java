@@ -40,9 +40,20 @@ public class UserDAO {
             user.isAdmin = resultSet.getString(7).equals("Admin");
             user.isActive = resultSet.getString(8).equals("Active");
             UserWindow.id = user.userID;
+            close();
         }
         catch(SQLException e){
             log.error("setUser exception, " + e);
+        }
+    }
+
+    protected void close(){
+        try {
+            statement.close();
+            resultSet.close();
+        }
+        catch (SQLException e){
+            log.error("I didn't close sh*t");
         }
     }
 }

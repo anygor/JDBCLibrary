@@ -51,6 +51,7 @@ public class BookmarkDAO {
                     UserWindow.history.addToHistory("User with ID " + this.userID + " added a bookmark: " + bookName + " -" + page + "\n");
                     log.info("bookmark added");
                 }
+                close();
             } catch (SQLException e) {
                 log.error("addBookmarksqlexception");
             }
@@ -66,9 +67,13 @@ public class BookmarkDAO {
             resultSet = statement.executeQuery(SQL);
             resultSet.next();
             if(resultSet.getInt(1) != 0){
+                close();
                 return true;
             }
-            else return false;
+            else {
+                close();
+                return false;
+            }
         }
         catch(SQLException e){
             log.error("bookmark exists exception sql");
@@ -89,6 +94,7 @@ public class BookmarkDAO {
                 resultSet = statement.executeQuery(SQL);
                 UserWindow.history.addToHistory("User with id " + this.userID + " removed a bookmark: " + bookName + " - " + pageNum + "\n");
                 log.info("Bookmark removed");
+                close();
             }
             catch(SQLException e){
                 log.error("removeBookmarkSQLexception");
@@ -104,9 +110,20 @@ public class BookmarkDAO {
             while (resultSet.next()) {
                 log.info(resultSet.getString(1) + ": " + resultSet.getInt(2));
             }
+            close();
         }
         catch(SQLException e){
             log.error("mybookmarks exception");
+        }
+    }
+
+    private void close(){
+        try {
+            statement.close();
+            resultSet.close();
+        }
+        catch (SQLException e){
+            log.error("I didn't close anything");
         }
     }
 }

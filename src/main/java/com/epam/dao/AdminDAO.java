@@ -17,7 +17,8 @@ public class AdminDAO extends UserDAO{
             String secondName;
             String lastName;
             String username;
-            log.info("Adding new user: \nFirst Name:");
+            log.info("Adding new user");
+            log.info("First Name:");
             name = scanner.nextLine();
             log.info("Second name (optional):");
             secondName = scanner.nextLine();
@@ -35,6 +36,7 @@ public class AdminDAO extends UserDAO{
                     "(" + (currentMaxUserID() + 1) + ", '" + name + "', '" + secondName + "', '" + lastName + "', '" + username + "', '0000', 'User', 'Active')";
             resultSet = statement.executeQuery(SQL);
             log.info("Done");
+            close();
         }
         catch(SQLException e){
             log.error("User addition SQL error");
@@ -51,6 +53,7 @@ public class AdminDAO extends UserDAO{
                 SQL = "UPDATE Users SET status = 'Blocked' WHERE login = '" + username + "'";
                 resultSet = statement.executeQuery(SQL);
                 log.info("User blocked");
+                close();
             }
             else log.info("no such user");
         }
@@ -65,8 +68,14 @@ public class AdminDAO extends UserDAO{
             SQL = "SELECT COUNT(*) FROM Users WHERE login = '" + username + "'";
             resultSet = statement.executeQuery(SQL);
             resultSet.next();
-            if (resultSet.getInt(1) == 0) return false;
-            else return true;
+            if (resultSet.getInt(1) == 0) {
+                close();
+                return false;
+            }
+            else {
+                close();
+                return true;
+            }
         }
         catch(SQLException e) {
             log.error("userExistsSQLException");
@@ -75,12 +84,15 @@ public class AdminDAO extends UserDAO{
     }
 
     private int currentMaxUserID(){
+        int id;
         try{
             statement = connection.createStatement();
             SQL = "SELECT userID FROM Users ORDER BY userID DESC";
             resultSet = statement.executeQuery(SQL);
             resultSet.next();
-            return resultSet.getInt(1);
+            id = resultSet.getInt(1);
+            close();
+            return id;
 
         }
         catch(SQLException e){

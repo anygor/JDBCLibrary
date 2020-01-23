@@ -33,6 +33,7 @@ public class AuthorDAO {
                 }
                 else log.info(resultSet.getInt(1) + ". " + resultSet.getString(2) + " " + resultSet.getString(4));
             }
+            close();
         }
         catch(SQLException e){
             log.error("listOfAuthors exception");
@@ -59,10 +60,12 @@ public class AuthorDAO {
             resultSet.next();
             if(resultSet.getInt(1) == 0){
                 log.info("No such author, author will be added");
+                close();
                 return false;
             }
             else {
                 log.info("Author is already in the library");
+                close();
                 return true;
             }
         }
@@ -107,6 +110,7 @@ public class AuthorDAO {
                 resultSet = statement.executeQuery(SQL);
                 UserWindow.history.addToHistory("User " + UserWindow.id + " added author " + authorFirstName + " " + authorLastName + "\n");
                 log.info("author added");
+                close();
             }
             catch(SQLException e){
                 log.error("sql exception at addauthor");
@@ -142,6 +146,7 @@ public class AuthorDAO {
                 resultSet = statement.executeQuery(SQL);
                 UserWindow.history.addToHistory("User " + UserWindow.id + " removed author " + authorFirstName + " " + authorLastName + "\n");
                 log.info("Author " + authorFirstName + " " + authorLastName + " removed");
+                close();
             }
             catch(SQLException e){
                 log.error("author remove error");
@@ -154,6 +159,7 @@ public class AuthorDAO {
         String authorFirstName;
         String authorSecondName;
         String authorLastName;
+        int id;
         if(authorStrings.length == 2){
             authorFirstName = authorStrings[0];
             authorLastName = authorStrings[1];
@@ -168,18 +174,30 @@ public class AuthorDAO {
                 SQL = "SELECT authorID FROM Authors WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "'";
                 resultSet = statement.executeQuery(SQL);
                 resultSet.next();
-                return resultSet.getInt(1);
+                id = resultSet.getInt(1);
+                close();
+                return id;
             }
             else{
                 statement = connection.createStatement();
                 SQL = "SELECT MAX(authorid) FROM AUTHORS;";
                 resultSet = statement.executeQuery(SQL);
-                return resultSet.getInt(1) + 1;
+                id = resultSet.getInt(1) + 1;
+                close();
+                return id;
             }
         }
         catch(SQLException e){
             return -1;
         }
     }
-
+    private void close(){
+        try {
+            statement.close();
+            resultSet.close();
+        }
+        catch (SQLException e){
+            log.error("I didn't close anything");
+        }
+    }
 }

@@ -4,3 +4,11 @@ User 2 added author Drop Mic
 User 2 removed book Tim Thaler or Sold laughter
 User 2 removed author Drop Mic
 James Cash logged out
+James Cash logged in
+User 2 added author Andzei Sapkowski
+User 2 added book The Last Wish
+James Cash logged out
+James Cash logged in
+James Cash logged out
+James Cash logged in
+James Cash logged out
