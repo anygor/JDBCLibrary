@@ -5,7 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -14,8 +14,8 @@ public class AuthorDAO {
 
     Connection connection;
     String SQL;
-    PreparedStatement pst;
-    ResultSet rs;
+    Statement statement;
+    ResultSet resultSet;
     private static final Logger log = LogManager.getLogger();
 
     public AuthorDAO(){
@@ -24,14 +24,14 @@ public class AuthorDAO {
 
     public void listOfAuthors(){
         try{
+            statement = connection.createStatement();
             SQL = "SELECT * FROM Authors WHERE isDeleted = 'False'";
-            pst = connection.prepareStatement(SQL);
-            rs = pst.executeQuery();
-            while(rs.next()){
-                if(!rs.getString(3).equals("null")) {
-                    log.info(rs.getInt(1) + ". " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4));
+            resultSet = statement.executeQuery(SQL);
+            while(resultSet.next()){
+                if(!resultSet.getString(3).equals("null")) {
+                    log.info(resultSet.getInt(1) + ". " + resultSet.getString(2) + " " + resultSet.getString(3) + " " + resultSet.getString(4));
                 }
-                else log.info(rs.getInt(1) + ". " + rs.getString(2) + " " + rs.getString(4));
+                else log.info(resultSet.getInt(1) + ". " + resultSet.getString(2) + " " + resultSet.getString(4));
             }
         }
         catch(SQLException e){
@@ -53,12 +53,11 @@ public class AuthorDAO {
             authorLastName = authorStrings[2];
         }
         try {
-            connection = UserWindow.connection;
+            statement = connection.createStatement();
             SQL = "SELECT COUNT(*) FROM Authors WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "' AND isDeleted = 'False'";
-            pst = connection.prepareStatement(SQL);
-            rs = pst.executeQuery();
-            rs.next();
-            if(rs.getInt(1) == 0){
+            resultSet = statement.executeQuery(SQL);
+            resultSet.next();
+            if(resultSet.getInt(1) == 0){
                 log.info("No such author, author will be added");
                 return false;
             }
@@ -97,15 +96,15 @@ public class AuthorDAO {
             }
             try {
                 int currentMaxID;
+                statement = connection.createStatement();
                 SQL = "SELECT MAX(authorid) FROM Authors";
-                pst = connection.prepareStatement(SQL);
-                rs = pst.executeQuery();
-                rs.next();
-                currentMaxID = rs.getInt(1);
+                resultSet = statement.executeQuery(SQL);
+                resultSet.next();
+                currentMaxID = resultSet.getInt(1);
+                statement = connection.createStatement();
                 SQL = "INSERT INTO \"JDBC\".\"AUTHORS\" (AUTHORID, NAME, SECONDNAME, LASTNAME, DOB, ISDELETED) VALUES " +
                         "('" + (currentMaxID + 1) + "', '" + authorFirstName + "', '" + authorSecondName + "', '" + authorLastName + "', '" + dob + "', '" + "False')";
-                pst = connection.prepareStatement(SQL);
-                rs = pst.executeQuery();
+                resultSet = statement.executeQuery(SQL);
                 UserWindow.history.addToHistory("User " + UserWindow.id + " added author " + authorFirstName + " " + authorLastName + "\n");
                 log.info("author added");
             }
@@ -134,12 +133,13 @@ public class AuthorDAO {
                 authorLastName = authorStrings[2];
             }
             try {
+                statement = connection.createStatement();
                 SQL = "UPDATE Books SET isDeleted = 'True' WHERE authorID = " + authorID(author);
-                pst = connection.prepareStatement(SQL);
-                rs = pst.executeQuery();
+                resultSet = statement.executeQuery(SQL);
+
+                statement = connection.createStatement();
                 SQL = "UPDATE Authors SET isDeleted = 'True' WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "'";
-                pst = connection.prepareStatement(SQL);
-                rs = pst.executeQuery();
+                resultSet = statement.executeQuery(SQL);
                 UserWindow.history.addToHistory("User " + UserWindow.id + " removed author " + authorFirstName + " " + authorLastName + "\n");
                 log.info("Author " + authorFirstName + " " + authorLastName + " removed");
             }
@@ -164,17 +164,17 @@ public class AuthorDAO {
         }
         try{
             if(authorExists(author)){
+                statement = connection.createStatement();
                 SQL = "SELECT authorID FROM Authors WHERE name = '" + authorFirstName + "' AND lastName = '" + authorLastName + "'";
-                pst = connection.prepareStatement(SQL);
-                rs = pst.executeQuery();
-                rs.next();
-                return rs.getInt(1);
+                resultSet = statement.executeQuery(SQL);
+                resultSet.next();
+                return resultSet.getInt(1);
             }
             else{
+                statement = connection.createStatement();
                 SQL = "SELECT MAX(authorid) FROM AUTHORS;";
-                pst = connection.prepareStatement(SQL);
-                rs = pst.executeQuery();
-                return rs.getInt(1) + 1;
+                resultSet = statement.executeQuery(SQL);
+                return resultSet.getInt(1) + 1;
             }
         }
         catch(SQLException e){

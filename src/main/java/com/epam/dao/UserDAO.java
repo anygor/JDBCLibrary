@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -15,8 +15,8 @@ public class UserDAO {
 
     Connection connection;
     String SQL;
-    PreparedStatement pst;
-    ResultSet rs;
+    Statement statement;
+    ResultSet resultSet;
     AuthorDAO authorDAO;
 
     public UserDAO(){
@@ -29,16 +29,16 @@ public class UserDAO {
         connection = UserWindow.connection;
         SQL = UserWindow.SQL;
         try {
+            statement = connection.createStatement();
             SQL = "SELECT * FROM Users WHERE login = '" + username + "'";
-            pst = connection.prepareStatement(SQL);
-            rs = pst.executeQuery();
-            rs.next();
-            user.userID = rs.getInt(1);
-            user.name = rs.getString(2);
-            user.secondName = rs.getString(3);
-            user.lastName = rs.getString(4);
-            user.isAdmin = rs.getString(7).equals("Admin");
-            user.isActive = rs.getString(8).equals("Active");
+            resultSet = statement.executeQuery(SQL);
+            resultSet.next();
+            user.userID = resultSet.getInt(1);
+            user.name = resultSet.getString(2);
+            user.secondName = resultSet.getString(3);
+            user.lastName = resultSet.getString(4);
+            user.isAdmin = resultSet.getString(7).equals("Admin");
+            user.isActive = resultSet.getString(8).equals("Active");
             UserWindow.id = user.userID;
         }
         catch(SQLException e){

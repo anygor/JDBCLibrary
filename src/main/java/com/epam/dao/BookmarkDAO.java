@@ -5,7 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -13,8 +13,8 @@ import java.util.Scanner;
 public class BookmarkDAO {
     Connection connection;
     String SQL;
-    PreparedStatement pst;
-    ResultSet rs;
+    Statement statement;
+    ResultSet resultSet;
     int userID;
     Scanner scanner;
     private static final Logger log = LogManager.getLogger();
@@ -38,16 +38,16 @@ public class BookmarkDAO {
             int page = scanner.nextInt();
             scanner = new Scanner(System.in);
             try {
+                statement = connection.createStatement();
                 SQL = "SELECT pageCount, ISBN FROM Books WHERE bookName = '" + bookName + "'";
-                pst = connection.prepareStatement(SQL);
-                rs = pst.executeQuery();
-                rs.next();
-                if (rs.getInt(1) < page) {
+                resultSet = statement.executeQuery(SQL);
+                resultSet.next();
+                if (resultSet.getInt(1) < page) {
                     log.info("This book can't have that bookmark");
                 } else {
-                    SQL = "INSERT INTO Bookmarks (userID, ISBN, pageNum, isDeleted) VALUES (" + this.userID + ", '" + rs.getString(2) + "', " + page + ", 'False')";
-                    pst = connection.prepareStatement(SQL);
-                    rs = pst.executeQuery();
+                    statement = connection.createStatement();
+                    SQL = "INSERT INTO Bookmarks (userID, ISBN, pageNum, isDeleted) VALUES (" + this.userID + ", '" + resultSet.getString(2) + "', " + page + ", 'False')";
+                    resultSet = statement.executeQuery(SQL);
                     UserWindow.history.addToHistory("User with ID " + this.userID + " added a bookmark: " + bookName + " -" + page + "\n");
                     log.info("bookmark added");
                 }
@@ -59,13 +59,13 @@ public class BookmarkDAO {
 
     private boolean bookmarkExists(String bookName, int pageNum){
         try{
+            statement = connection.createStatement();
             SQL = "SELECT COUNT(*) FROM Bookmarks WHERE userID = " + this.userID + " AND ISBN = " +
                     "(SELECT ISBN FROM Books WHERE ISBN = Bookmarks.ISBN AND bookName = '" + bookName + "') " +
                     " AND pageNum = " + pageNum + " AND isDeleted = 'False'";
-            pst = connection.prepareStatement(SQL);
-            rs = pst.executeQuery();
-            rs.next();
-            if(rs.getInt(1) != 0){
+            resultSet = statement.executeQuery(SQL);
+            resultSet.next();
+            if(resultSet.getInt(1) != 0){
                 return true;
             }
             else return false;
@@ -82,11 +82,11 @@ public class BookmarkDAO {
         }
         else{
             try {
+                statement = connection.createStatement();
                 SQL = "UPDATE Bookmarks SET isDeleted = 'True' where ISBN = " +
                         "(SELECT ISBN FROM Books WHERE ISBN = Bookmarks.ISBN AND bookName = '" +
                         bookName + "' AND pageNum = " + pageNum + " AND userID = " + this.userID + ")";
-                pst = connection.prepareStatement(SQL);
-                rs = pst.executeQuery();
+                resultSet = statement.executeQuery(SQL);
                 UserWindow.history.addToHistory("User with id " + this.userID + " removed a bookmark: " + bookName + " - " + pageNum + "\n");
                 log.info("Bookmark removed");
             }
@@ -98,11 +98,11 @@ public class BookmarkDAO {
 
     public void myBookmarks(){
         try{
+            statement = connection.createStatement();
             SQL = "SELECT (SELECT bookName FROM Books WHERE ISBN = Bookmarks.ISBN), pageNum FROM Bookmarks WHERE isDeleted = 'False' AND userID = " + this.userID;
-            pst = connection.prepareStatement(SQL);
-            rs = pst.executeQuery();
-            while (rs.next()) {
-                log.info(rs.getString(1) + ": " + rs.getInt(2));
+            resultSet = statement.executeQuery(SQL);
+            while (resultSet.next()) {
+                log.info(resultSet.getString(1) + ": " + resultSet.getInt(2));
             }
         }
         catch(SQLException e){

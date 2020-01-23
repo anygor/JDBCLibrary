@@ -30,10 +30,10 @@ public class AdminDAO extends UserDAO{
                 secondName = "null";
             }
             log.info("Username will be " + username);
+            statement = connection.createStatement();
             SQL = "INSERT INTO \"JDBC\".\"USERS\" (USERID, NAME, SECONDNAME, LASTNAME, LOGIN, PASSWORD, ROLE, STATUS) VALUES " +
                     "(" + (currentMaxUserID() + 1) + ", '" + name + "', '" + secondName + "', '" + lastName + "', '" + username + "', '0000', 'User', 'Active')";
-            pst = connection.prepareStatement(SQL);
-            rs = pst.executeQuery();
+            resultSet = statement.executeQuery(SQL);
             log.info("Done");
         }
         catch(SQLException e){
@@ -47,9 +47,9 @@ public class AdminDAO extends UserDAO{
         String username = scanner.nextLine();
         try{
             if(userExists(username)){
+                statement = connection.createStatement();
                 SQL = "UPDATE Users SET status = 'Blocked' WHERE login = '" + username + "'";
-                pst = connection.prepareStatement(SQL);
-                rs = pst.executeQuery();
+                resultSet = statement.executeQuery(SQL);
                 log.info("User blocked");
             }
             else log.info("no such user");
@@ -61,11 +61,11 @@ public class AdminDAO extends UserDAO{
 
     private boolean userExists(String username){
         try{
+            statement = connection.createStatement();
             SQL = "SELECT COUNT(*) FROM Users WHERE login = '" + username + "'";
-            pst = connection.prepareStatement(SQL);
-            rs = pst.executeQuery();
-            rs.next();
-            if (rs.getInt(1) == 0) return false;
+            resultSet = statement.executeQuery(SQL);
+            resultSet.next();
+            if (resultSet.getInt(1) == 0) return false;
             else return true;
         }
         catch(SQLException e) {
@@ -76,11 +76,11 @@ public class AdminDAO extends UserDAO{
 
     private int currentMaxUserID(){
         try{
+            statement = connection.createStatement();
             SQL = "SELECT userID FROM Users ORDER BY userID DESC";
-            pst = connection.prepareStatement(SQL);
-            rs = pst.executeQuery();
-            rs.next();
-            return rs.getInt(1);
+            resultSet = statement.executeQuery(SQL);
+            resultSet.next();
+            return resultSet.getInt(1);
 
         }
         catch(SQLException e){
