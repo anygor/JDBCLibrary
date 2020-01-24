@@ -12,10 +12,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.Properties;
 import java.util.Scanner;
 
 public class Book {
@@ -77,15 +75,18 @@ public class Book {
         BufferedReader in = null;
         StringBuilder json = new StringBuilder("");
         try {
-            in = new BufferedReader(new FileReader("src/main/resources/catalog.json"));
+            Properties property = new Properties();
+            FileInputStream fileInputStream = new FileInputStream("src/main/resources/config.properties");
+            property.load(fileInputStream);
+            in = new BufferedReader(new FileReader((property.getProperty("db.catalogJSON"))));
             String buffer;
             while ((buffer = in.readLine()) != null) {
                 json.append(buffer);
             }
             log.info(json);
             String[] array = json.toString().split("}, {2}\\{");
-            for(int i = 0; i < array.length; i++){
-                parseBooks(array[i]);
+            for (String s : array) {
+                parseBooks(s);
             }
         }
          catch (FileNotFoundException e) {
@@ -125,7 +126,10 @@ public class Book {
 
     public void csv(){
         try {
-            BufferedReader in = new BufferedReader(new FileReader("src/main/resources/catalog.csv"));
+            Properties property = new Properties();
+            FileInputStream fileInputStream = new FileInputStream("src/main/resources/config.properties");
+            property.load(fileInputStream);
+            BufferedReader in = new BufferedReader(new FileReader(property.getProperty("db.catalogCSV")));
             CSVParser csvParser = new CSVParser(in,CSVFormat.DEFAULT.
                     withHeader("Book Name", "Release Year", "Page Amount", "Publisher", "Last Name", "First Name", "Second Name", "Date of Birth"));
             for(CSVRecord csvRecord : csvParser){
