@@ -1,4 +1,4 @@
-"Наименование книги","Год","Количество Страниц","ISBN","Издательство","Фамилия автора","Имя автора","Отчество автора","Дата рождения автора"
-"Стрелок",1982,320,"978-0452261341","Donald M. Grant, Publisher, Inc.","Кинг","Стивен","","21.09.1947"
-"Извлечение троих",1986,299,"978-0452261342","Donald M. Grant, Publisher, Inc.","Кинг","Стивен","","21.09.1947"
-"Лабиринт отражений",1997,434,"978-5976212268","АСТ","Лукьяненко","Сергей","Васильевич","11.04.1986"
+"Book Name","Release Year","Page Amount","ISBN","Publisher","Last Name","First Name","Second Name","Date of Birth"
+"Gunslinger",1982,320,"978-0452261341","Donald M. Grant, Publisher, Inc.","King","Stephen","","21.09.1947"
+"The Dark Tower",1986,299,"978-0452261342","Donald M. Grant, Publisher, Inc.","King","Stephen","","21.09.1947"
+"Labyrinth of Reflections",1997,434,"978-5976212268","ACT","Lukyanenko","Sergei","Vasilyevich","11.04.1986"

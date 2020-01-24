@@ -1,20 +1,4 @@
 James Cash logged in
-User 2 added author Stephen King
-User 2 added book Gunslinger
-User 2 added book The Dark Tower
-User 2 added author Sergei Lukyanenko
-User 2 added book Labyrinth of Reflections
-James Cash logged out
-James Cash logged in
-User 2 removed author Stephen King
-User 2 removed author Sergei Lukyanenko
-User 2 removed book Gunslinger
-User 2 removed book The Dark Tower
-User 2 added author Stephen King
-User 2 added book Gunslinger
-User 2 added book The Dark Tower
-User 2 added author Sergei Lukyanenko
-User 2 added book Labyrinth of Reflections
 James Cash logged out
 James Cash logged in
 User 2 removed author Stephen King

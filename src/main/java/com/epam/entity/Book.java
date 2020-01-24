@@ -1,10 +1,16 @@
 package com.epam.entity;
 
 import com.epam.dao.BookDAO;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -67,13 +73,6 @@ public class Book {
         bookDAO.listOfBooks();
     }
 
-    public void jsonBook(Book book){
-        String json = gson.toJson(book);
-        log.info(json);
-
-        Book book1 = gson.fromJson(json, Book.class);
-    }
-
     public void bookJson() {
         BufferedReader in = null;
         StringBuilder json = new StringBuilder("");
@@ -122,6 +121,40 @@ public class Book {
         log.info(_publisher);
         log.info(_dob);
         addBook(_bookName, _releaseYear, _author, _pageCount, _publisher);
+    }
+
+    public void csv(){
+        try {
+            BufferedReader in = new BufferedReader(new FileReader("src/main/resources/catalog.csv"));
+            CSVParser csvParser = new CSVParser(in,CSVFormat.DEFAULT.
+                    withHeader("Book Name", "Release Year", "Page Amount", "Publisher", "Last Name", "First Name", "Second Name", "Date of Birth"));
+            for(CSVRecord csvRecord : csvParser){
+                String _bookName = csvRecord.get("Book Name");
+                if(_bookName.equals("Book Name")) continue;  // Костыль жоский, но ничего другого в голову не пришло
+                int _releaseYear = Integer.parseInt(csvRecord.get("Release Year"));
+                int _pageAmount = Integer.parseInt(csvRecord.get("Page Amount"));
+                String _publisher = csvRecord.get(4);
+                String _authorName;
+                if(csvRecord.get(7).equals("")) {
+                    _authorName = csvRecord.get(6) + " " + csvRecord.get(5);
+                }
+                else _authorName = csvRecord.get(6) + " " + csvRecord.get(7) + " " + csvRecord.get(5);
+                String _dob = csvRecord.get(8);
+                log.info(_bookName);
+                log.info(_releaseYear);
+                log.info(_authorName);
+                log.info(_pageAmount);
+                log.info(_publisher);
+                log.info(_dob);
+                addBook(_bookName, _releaseYear, _authorName, _pageAmount, _publisher);
+            }
+        }
+        catch (FileNotFoundException e){
+            log.error("filenotfoundcsv");
+        }
+        catch (IOException e) {
+            log.error("ioexception csv");
+        }
     }
 
 

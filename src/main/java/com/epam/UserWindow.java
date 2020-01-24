@@ -133,6 +133,7 @@ public class UserWindow {
                     log.info("removeAuthor - to remove author and their books");
                     log.info("search - to go to search sub-menu");
                     log.info("json - to get books from catalog.json");
+                    log.info("csv - to get books from catalog.csv");
                     log.info("quit - to quit");
                     break;
                 }
@@ -147,6 +148,10 @@ public class UserWindow {
                 }
                 case "json" :{
                     new Book().bookJson();
+                    break;
+                }
+                case "csv":{
+                    new Book().csv();
                     break;
                 }
                 case "myBookmarks": {
@@ -226,6 +231,7 @@ public class UserWindow {
                     log.info("removeAuthor - to remove author and their books");
                     log.info("search - to go to search sub-menu");
                     log.info("json - to get books from catalog.json");
+                    log.info("csv - to get books from catalog.csv");
                     log.info("quit - to quit");
                     break;
                 }
@@ -243,6 +249,10 @@ public class UserWindow {
                 }
                 case "json" :{
                     new Book().bookJson();
+                    break;
+                }
+                case "csv":{
+                    new Book().csv();
                     break;
                 }
                 case "myBookmarks": {
