@@ -3,6 +3,8 @@ package com.epam;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.Properties;
 import java.util.Scanner;
@@ -12,6 +14,9 @@ import com.epam.dao.BookDAO;
 import com.epam.entity.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import sun.security.provider.MD5;
+
+import javax.xml.bind.DatatypeConverter;
 
 public class UserWindow {
     Scanner scanner;
@@ -86,6 +91,14 @@ public class UserWindow {
         username = scanner.nextLine();
         log.info("Password: ");
         password = scanner.nextLine();
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.update(password.getBytes());
+            byte[] digest = messageDigest.digest();
+            password = DatatypeConverter.printHexBinary(digest).toUpperCase();
+        } catch (NoSuchAlgorithmException e) {
+            log.error(e);
+        }
     }
 
     public void welcome() {

@@ -3,10 +3,14 @@ package com.epam.dao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.xml.bind.DatatypeConverter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Scanner;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import sun.security.provider.MD5;
 
 public class AdminDAO extends UserDAO{
     Scanner scanner;
@@ -19,6 +23,7 @@ public class AdminDAO extends UserDAO{
             String secondName;
             String lastName;
             String username;
+            String password;
             log.info("Adding new user");
             log.info("First Name:");
             name = scanner.nextLine();
@@ -32,9 +37,19 @@ public class AdminDAO extends UserDAO{
                 username = (name.substring(0, 1) + lastName).toLowerCase();
                 secondName = "null";
             }
+            log.info("Digit user's password:");
+            password = scanner.nextLine();
+            try {
+                MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+                messageDigest.update(password.getBytes());
+                byte[] digest = messageDigest.digest();
+                password = DatatypeConverter.printHexBinary(digest).toUpperCase();
+            } catch (NoSuchAlgorithmException e) {
+                log.error(e);
+            }
             log.info("Username will be " + username);
             SQL = "INSERT INTO \"JDBC\".\"USERS\" (USERID, NAME, SECONDNAME, LASTNAME, LOGIN, PASSWORD, ROLE, STATUS) VALUES " +
-                    "(" + (currentMaxUserID() + 1) + ", '" + name + "', '" + secondName + "', '" + lastName + "', '" + username + "', '0000', 'User', 'Active')";
+                    "(" + (currentMaxUserID() + 1) + ", '" + name + "', '" + secondName + "', '" + lastName + "', '" + username + "', '" + password + "', 'User', 'Active')";
             try(ResultSet resultSet = statement.executeQuery(SQL)) {
                 log.info("Done");
             }
