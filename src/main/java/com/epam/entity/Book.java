@@ -71,6 +71,7 @@ public class Book {
         bookDAO.listOfBooks();
     }
 
+    @Deprecated
     public void bookJson() {
         BufferedReader in = null;
         StringBuilder json = new StringBuilder("");
@@ -97,6 +98,7 @@ public class Book {
         }
     }
 
+    @Deprecated
     private void parseBooks(String json){
         String _bookName = json.substring(json.indexOf("\"bookName\": \"") + 13, json.indexOf("\",    \"releaseYear\":"));
         int _releaseYear = Integer.parseInt(json.substring(json.indexOf("\"releaseYear\": ") + 15, json.indexOf(",    \"pageCount\"")));

@@ -147,7 +147,7 @@ public class UserWindow {
                     break;
                 }
                 case "json" :{
-                    new Book().bookJson();
+                    new BookJSON().json();
                     break;
                 }
                 case "csv":{
