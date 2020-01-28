@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.LinkedList;
+import java.util.Properties;
 import java.util.Queue;
 
 public class History {
@@ -16,16 +17,25 @@ public class History {
         history = new LinkedList<>();
         fileHistoryInput();
         try {
-            out = new BufferedWriter(new PrintWriter(new FileOutputStream("src/main/resources/historyText.txt", false)));
+            Properties property = new Properties();
+            FileInputStream fileInputStream = new FileInputStream("src/main/resources/config.properties");
+            property.load(fileInputStream);
+            out = new BufferedWriter(new PrintWriter(new FileOutputStream(property.getProperty("db.history"), false)));
         }
         catch(FileNotFoundException e) {
             log.error(e);
+        }
+        catch(IOException e){
+            log.error("history ioe");
         }
 
     }
     public static void fileHistoryInput(){
         try {
-            in = new BufferedReader(new FileReader("src/main/resources/historyText.txt"));
+            Properties property = new Properties();
+            FileInputStream fileInputStream = new FileInputStream("src/main/resources/config.properties");
+            property.load(fileInputStream);
+            in = new BufferedReader(new FileReader(property.getProperty("db.history")));
             String buffer;
             while ((buffer = in.readLine()) != null) {
                 history.add(buffer+'\n');

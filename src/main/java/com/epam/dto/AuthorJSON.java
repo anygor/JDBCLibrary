@@ -1,4 +1,4 @@
-package com.epam.entity;
+package com.epam.dto;
 
 public class AuthorJSON {
     String name;

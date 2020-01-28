@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.util.Scanner;
 import java.sql.Statement;
 import java.sql.ResultSet;
-import sun.security.provider.MD5;
 
 public class AdminDAO extends UserDAO{
     Scanner scanner;

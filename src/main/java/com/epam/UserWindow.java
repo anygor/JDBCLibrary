@@ -11,10 +11,10 @@ import java.util.Scanner;
 
 import com.epam.dao.AuthorDAO;
 import com.epam.dao.BookDAO;
+import com.epam.dto.BookJSON;
 import com.epam.entity.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import sun.security.provider.MD5;
 
 import javax.xml.bind.DatatypeConverter;
 
