@@ -1,6 +1,5 @@
 package com.epam.dto;
 
-import com.epam.UserWindow;
 import com.epam.entity.Book;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,7 +20,6 @@ public class BookJSON {
     private static final Logger log = LogManager.getLogger();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public void json(){
-        Properties property = new Properties();
         StringBuilder json = new StringBuilder("");
         BufferedReader in;
         String buffer;
@@ -34,9 +32,9 @@ public class BookJSON {
         String authorCache;
 
         try {
-            property = new Properties();
-            InputStream inputStream = UserWindow.class.getResourceAsStream("/config.properties");
-            property.load(inputStream);
+            Properties property = new Properties();
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("config.properties"));
+            property.load(bufferedReader);
             in = new BufferedReader(new FileReader((property.getProperty("db.catalogJSON"))));
             while ((buffer = in.readLine()) != null) {
                 json.append(buffer);

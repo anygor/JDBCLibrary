@@ -78,8 +78,8 @@ public class Book {
         StringBuilder json = new StringBuilder("");
         try {
             Properties property = new Properties();
-            InputStream inputStream = UserWindow.class.getResourceAsStream("/config.properties");
-            property.load(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("config.properties"));
+            property.load(bufferedReader);
             in = new BufferedReader(new FileReader((property.getProperty("db.catalogJSON"))));
             String buffer;
             while ((buffer = in.readLine()) != null) {
@@ -130,8 +130,8 @@ public class Book {
     public void csv(){
         try {
             Properties property = new Properties();
-            InputStream inputStream = UserWindow.class.getResourceAsStream("/config.properties");
-            property.load(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("config.properties"));
+            property.load(bufferedReader);
             BufferedReader in = new BufferedReader(new FileReader(property.getProperty("db.catalogCSV")));
             CSVParser csvParser = new CSVParser(in,CSVFormat.DEFAULT.
                     withHeader("Book Name", "Release Year", "Page Amount", "Publisher", "Last Name", "First Name", "Second Name", "Date of Birth"));
