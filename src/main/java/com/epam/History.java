@@ -18,8 +18,8 @@ public class History {
         fileHistoryInput();
         try {
             Properties property = new Properties();
-            FileInputStream fileInputStream = new FileInputStream("src/main/resources/config.properties");
-            property.load(fileInputStream);
+            InputStream inputStream = UserWindow.class.getResourceAsStream("/config.properties");
+            property.load(inputStream);
             out = new BufferedWriter(new PrintWriter(new FileOutputStream(property.getProperty("db.history"), false)));
         }
         catch(FileNotFoundException e) {
@@ -33,8 +33,8 @@ public class History {
     public static void fileHistoryInput(){
         try {
             Properties property = new Properties();
-            FileInputStream fileInputStream = new FileInputStream("src/main/resources/config.properties");
-            property.load(fileInputStream);
+            InputStream inputStream = UserWindow.class.getResourceAsStream("/config.properties");
+            property.load(inputStream);
             in = new BufferedReader(new FileReader(property.getProperty("db.history")));
             String buffer;
             while ((buffer = in.readLine()) != null) {

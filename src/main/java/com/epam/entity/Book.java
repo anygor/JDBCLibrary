@@ -1,5 +1,6 @@
 package com.epam.entity;
 
+import com.epam.UserWindow;
 import com.epam.dao.BookDAO;
 
 import com.google.gson.Gson;
@@ -77,8 +78,8 @@ public class Book {
         StringBuilder json = new StringBuilder("");
         try {
             Properties property = new Properties();
-            FileInputStream fileInputStream = new FileInputStream("src/main/resources/config.properties");
-            property.load(fileInputStream);
+            InputStream inputStream = UserWindow.class.getResourceAsStream("/config.properties");
+            property.load(inputStream);
             in = new BufferedReader(new FileReader((property.getProperty("db.catalogJSON"))));
             String buffer;
             while ((buffer = in.readLine()) != null) {
@@ -129,8 +130,8 @@ public class Book {
     public void csv(){
         try {
             Properties property = new Properties();
-            FileInputStream fileInputStream = new FileInputStream("src/main/resources/config.properties");
-            property.load(fileInputStream);
+            InputStream inputStream = UserWindow.class.getResourceAsStream("/config.properties");
+            property.load(inputStream);
             BufferedReader in = new BufferedReader(new FileReader(property.getProperty("db.catalogCSV")));
             CSVParser csvParser = new CSVParser(in,CSVFormat.DEFAULT.
                     withHeader("Book Name", "Release Year", "Page Amount", "Publisher", "Last Name", "First Name", "Second Name", "Date of Birth"));

@@ -3,6 +3,7 @@ package com.epam;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
@@ -38,8 +39,8 @@ public class UserWindow {
         try {
             // Initializing properties for database connection establishment.
             Properties property = new Properties();
-            FileInputStream fileInputStream = new FileInputStream("src/main/resources/config.properties");
-            property.load(fileInputStream);
+            InputStream inputStream = UserWindow.class.getResourceAsStream("/config.properties");
+            property.load(inputStream);
 
             URL = property.getProperty("db.url");
             USER_NAME = property.getProperty("db.username");
